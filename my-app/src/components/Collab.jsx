@@ -24,7 +24,7 @@ export default class Collab extends Component {
     }
     
     handleShare = () => {
-        const group = new UserGroup({ name: 'records-health-' + blockstack.loadUserData().then(profile => profile.name) }); 
+        const group = new UserGroup({ name: 'records-health-' + blockstack.loadUserData().profile.name }); 
         console.log(group);
 
         (async () => {

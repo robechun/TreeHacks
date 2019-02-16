@@ -6,6 +6,12 @@ import App from './components/App.jsx';
 import { BrowserRouter } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker';
 
+import { configure } from 'radiks';
+
+configure({
+  apiServer: 'http://localhost:1260'
+});
+
 ReactDOM.render((
 	<BrowserRouter>
 		<App />

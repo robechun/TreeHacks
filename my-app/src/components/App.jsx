@@ -1,6 +1,7 @@
 import React, { Component, Link } from 'react';
-import Profile from './Profile.jsx';
+import Profile from '../views/Profile.jsx';
 import Signin from './Signin.jsx';
+import Collab from '../views/Collab.jsx';
 import {
   isSignInPending,
   isUserSignedIn,
@@ -8,6 +9,8 @@ import {
   handlePendingSignIn,
   signUserOut,
 } from 'blockstack';
+
+import { User } from 'radiks';
 
 import { Switch, Route } from 'react-router-dom'
 
@@ -17,10 +20,22 @@ export default class App extends Component {
   	super(props);
   }
 
-  handleSignIn(e) {
-    e.preventDefault();
-    const origin = window.location.origin
-    redirectToSignIn(origin, origin + '/manifest.json', ['store_write', 'publish_data'])
+  handleSignIn = (e) =>  {
+    if (isSignInPending()) {
+      console.log('zero')
+      (async () => {
+        console.log('one')
+        await handlePendingSignIn();
+      })();
+      (async () => {
+        console.log('two')
+        await User.createWithCurrentUser();
+      })();
+    } else {
+      e.preventDefault();
+      const origin = window.location.origin
+      redirectToSignIn(origin, origin + '/manifest.json', ['store_write', 'publish_data'])
+    }
   }
 
   handleSignOut(e) {
@@ -44,6 +59,7 @@ export default class App extends Component {
               />
             </Switch>
           }
+          <Collab></Collab>
         </div>
       </div>
     );

@@ -26,8 +26,12 @@ export default class Profile extends Component {
       },
       username: "",
       newStatus: "",
+
+
       statuses: [],
       statusIndex: 0,
+
+
       isLoading: false
     };
   }
@@ -43,12 +47,14 @@ export default class Profile extends Component {
     this.fetchData()
   }
 
+  // TODO refactor or delete
   handleNewStatusChange(event) {
     this.setState({
       newStatus: event.target.value
     })
   }
 
+  // TODO refactor or delete
   handleNewStatusSubmit(event) {
     this.saveNewStatus(this.state.newStatus)
     this.setState({
@@ -56,6 +62,7 @@ export default class Profile extends Component {
     })
   }
 
+  // TODO refactor or delete
   saveNewStatus(statusText) {
     let statuses = this.state.statuses
 
@@ -75,6 +82,7 @@ export default class Profile extends Component {
       })
   }
 
+  // TODO refactor or delete
   fetchData() {
     if (this.isLocal()) {
       this.setState({ isLoading: true })
@@ -162,6 +170,9 @@ export default class Profile extends Component {
                 </div>
               </div>
             </div>
+
+            {/* This might be where we put the table in */}
+            
             {this.isLocal() &&
               <div className="new-status">
                 <div className="col-md-12">

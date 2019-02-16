@@ -13,23 +13,30 @@ const statusFileName = 'statuses.json'
 
 export default class Profile extends Component {
   constructor(props) {
-  	super(props);
+    super(props);
 
-  	this.state = {
-  	  person: {
-  	  	name() {
+    this.state = {
+      person: {
+        name() {
           return 'Anonymous';
         },
-  	  	avatarUrl() {
-  	  	  return avatarFallbackImage;
-  	  	},
-  	  },
+        avatarUrl() {
+          return avatarFallbackImage;
+        },
+      },
       username: "",
       newStatus: "",
       statuses: [],
       statusIndex: 0,
       isLoading: false
-  	};
+    };
+  }
+
+  componentWillMount() {
+    this.setState({
+      person: new Person(loadUserData().profile),
+      username: loadUserData().username
+    })
   }
 
   componentDidMount() {
@@ -158,14 +165,18 @@ export default class Profile extends Component {
             {this.isLocal() &&
               <div className="new-status">
                 <div className="col-md-12">
-                  <p>My Health Data</p>
+                  <textarea className="input-status"
+                    value={this.state.newStatus}
+                    onChange={e => this.handleNewStatusChange(e)}
+                    placeholder="What's on your mind?"
+                  />
                 </div>
                 <div className="col-md-12 text-right">
                   <button
                     className="btn btn-primary btn-lg"
                     onClick={e => this.handleNewStatusSubmit(e)}
                   >
-                    Button
+                    Submit
                   </button>
                 </div>
               </div>

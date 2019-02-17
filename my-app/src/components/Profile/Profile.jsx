@@ -127,7 +127,7 @@ export default class Profile extends Component {
       })
       .finally(() => {
         this.setState({ isLoading: false })
-      };
+      });
     /*} else {
       const username = this.props.match.params.username
       this.setState({ isLoading: true })

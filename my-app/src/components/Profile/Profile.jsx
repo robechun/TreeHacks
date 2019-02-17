@@ -10,7 +10,7 @@ import {
 } from 'blockstack';
 
 import Table from "../Table.jsx";
-import { UserGroup } from 'radiks';
+import HealthChart from '../../models/HealthChart.js'
 
 
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
@@ -32,10 +32,8 @@ export default class Profile extends Component {
       username: "",
       newStatus: "",
 
-
       statuses: [],
       statusIndex: 0,
-
 
       isLoading: false
     };
@@ -67,31 +65,27 @@ export default class Profile extends Component {
     })
   }
 
+  
+
   handleUploadNewFile(event) {
+    
     // TODO: allow user to put in a text file
-    saveNewStatus(text)
-    const group = new UserGroup({ name: 'records-health-' + blockstack.loadUserData().profile.name + this.state.statusIndex}); 
-    console.log(group);
-
-    (async () => {
-        await group.create();
-        console.log('two');
-        const invitation = await group.makeGroupMembership(this.state.usernameToInvite);
-        console.log(invitation._id); // the ID used to later activate an invitation
-        // TODO: give this to the user you want to share it with
-    })();
-  }
-
-
-  handleSignOut(e) {
-    e.preventDefault();
-    signUserOut(window.location.origin);
+    // saveNewStatus(text)
+    const HealthChart = {
+      userGroupId: "dummy", 
+      name: "Jay",
+      age: 13,
+      date: Date.now(),
+      symptoms: "hi",
+      dianosis: "hi",
+      treatment: "hi"
+    }
+    this.saveNewStatus(JSON.stringify(HealthChart))
   }
 
   // TODO refactor or delete
-  saveNewStatus(statusText) {
+  saveNewStatus = (statusText) => {
     let statuses = this.state.statuses
-
     let status = {
       id: this.state.statusIndex++,
       text: statusText.trim(),
@@ -108,26 +102,34 @@ export default class Profile extends Component {
       })
   }
 
+  handleSignOut(e) {
+    e.preventDefault();
+    signUserOut(window.location.origin);
+  }
+  
   // TODO refactor or delete
   fetchData() {
-    // if (this.isLocal()) {
-      this.setState({ isLoading: true })
-      const options = { decrypt: false}, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' }
-      getFile('statuses.json', options)
-        .then((file) => {
-          var statuses = JSON.parse(file || '[]')
-          this.setState({
-            person: new Person(loadUserData().profile),
-            username: loadUserData().username,
-            statusIndex: statuses.length,
-            statuses: statuses,
-          })
+    // use invitationKey to access the pool
+    // query the pool
+    // and get document
+    // save document on my local file aka handleUploadNewFile on my part
+
+    this.setState({ isLoading: true })
+    const options = { decrypt: false, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' }
+    getFile('statuses.json', options)
+      .then((file) => {
+        var statuses = JSON.parse(file || '[]')
+        this.setState({
+          person: new Person(loadUserData().profile),
+          username: loadUserData().username,
+          statusIndex: statuses.length,
+          statuses: statuses,
         })
-        .finally(() => {
-          this.setState({ isLoading: false })
-        })
-    // } else {
-      { /*
+      })
+      .finally(() => {
+        this.setState({ isLoading: false })
+      };
+    /*} else {
       const username = this.props.match.params.username
       this.setState({ isLoading: true })
 
@@ -158,8 +160,8 @@ export default class Profile extends Component {
         .finally(() => {
           this.setState({ isLoading: false })
         })
-      */}
-    // }
+      }
+      */
   }
 
   isLocal() {

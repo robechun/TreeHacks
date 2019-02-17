@@ -3,7 +3,6 @@ import { Switch, Route } from 'react-router-dom';
 import Profile from '../Profile/Profile.jsx';
 import Shared from '../Shared/Shared.jsx';
 
-<<<<<<< HEAD
 // const Home = (props) => (
 //   <main className="home">
 //     <Switch>
@@ -31,19 +30,6 @@ export default class Home extends Component	{
     );
   }
 }
-=======
-const Home = () => (
-  <main className="home">
-    <Switch>
-      <Route exact path='/' component={Profile}/>
-      <Route exact path='/profile' component={Profile}/>
-      <Route exact path='/shared' component={Shared}/>
-    </Switch>
-  </main>
-)
-
-export default Home
->>>>>>> reactRefactor
 
 
 // export default class App extends React.Component {

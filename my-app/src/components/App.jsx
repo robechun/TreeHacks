@@ -73,12 +73,9 @@ export default class App extends Component {
             <Collab></Collab>
             </div>
           }
-<<<<<<< HEAD
           <Collab></Collab>
           <ActivateInvitation></ActivateInvitation>
           <Shared></Shared>
-=======
->>>>>>> reactRefactor
         </div>
       </div>
     );

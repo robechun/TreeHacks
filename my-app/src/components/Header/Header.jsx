@@ -29,6 +29,9 @@ export default class Header extends Component {
             <LinkContainer to="/open">
               <NavItem className="navitem">Open</NavItem>
             </LinkContainer>
+            <LinkContainer to="/test">
+              <NavItem className="navitem">Form</NavItem>
+            </LinkContainer>
           </Nav>
           <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />

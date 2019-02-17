@@ -1,6 +1,6 @@
 import { Model } from 'radiks';
 
-class HealthChart extends Model {
+export default class HealthChart extends Model {
   static className = 'HealthChart';
 
   static schema = {

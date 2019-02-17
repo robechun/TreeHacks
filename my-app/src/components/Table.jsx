@@ -5,30 +5,45 @@ export default class Table extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+        	data: [],
+        	columns: ["Date", "File Name"]
+        }
     }
 
     componentDidMount = () => {
 
     }
+
+    parsedData(data) {
+    	var arr = []
+    	var parsedJSON = JSON.parse(data)
+    	console.log(parsedJSON)
+		var filterArray = ["id","created_at"]
+
+		for(var i = 0; i< parsedJSON.length;++i){    
+			var temp = [ parsedJSON[i].id, parsedJSON[i].created_at ]
+			arr.push(temp)
+		}
+		return arr;
+    }
+
 	render() {
+		console.log(this.props.data)
+		const data = this.parsedData(this.props.data);
 
-		const columns = ["Date", "File Name"];
-
-		const data = [
-		 ["04/03/17", "file1"],
-		 ["03/19/16", "file2"]
-		];
-
+		this.setState({ data: data });
+		
 		const options = {
-		  filterType: 'checkbox',
-		  onRowsSelect: this.props.onRowsSelect,
+		  'filterType': 'checkbox',
+		  'onRowsSelect': this.props.onRowsSelect,
 		};
-
 		return (
 			<MUIDataTable
 			  title={"Medical Data"}
-			  data={this.props.data}
-			  columns={columns}
+			  data={this.state.data}
+			  columns={this.state.columns}
 			  options={options}
 			/>
 		)

@@ -6,7 +6,8 @@ import {
   getFile,
   putFile,
   lookupProfile,
-  signUserOut
+  signUserOut,
+  listFiles
 } from 'blockstack';
 
 import Table from "../Table.jsx";
@@ -22,6 +23,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import MUIDataTable from "mui-datatables";
+
+
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
 
@@ -30,72 +34,75 @@ export default class Profile extends Component {
     super(props);
 
     this.state = {
-      person: {
-        name() {
-          return 'Anonymous';
-        },
-        avatarUrl() {
-          return avatarFallbackImage;
-        },
-      },
+      title: "Medical Data",
+      tabledata: [],
       username: "",
-      newStatus: "",
-
       statuses: [],
       statusIndex: 0,
-
-      isLoading: false,
-
       showModal: false,
       showDialog: false,
-
       toSend: "",
+      columns: ["Date", "File Name"],
     };
 
     this.selectedRows = []
-
-    this.data = [
-     ["04/03/17", "file1"],
-     ["03/19/16", "file2"]
-    ];
-  }
-
-  componentWillMount() {
-    this.setState({
-      person: new Person(loadUserData().profile),
-      username: loadUserData().username
-    })
   }
 
   componentDidMount() {
-    this.fetchData()
-  }
-
-  // TODO refactor or delete
-  handleNewStatusChange(event) {
     this.setState({
-      newStatus: event.target.value
+      username: loadUserData().username
     })
+    let input = "kimjenna.id.blockstack/";
+    listFiles((files) => {
+     if (files.substring(0, input.length) === input) {
+      this.fetchData(files);
+     }
+     return true;
+    })
+    console.log('whee')
+    console.log(this.state.tabledata)
   }
 
-  // TODO refactor or delete
-  handleNewStatusSubmit(event) {
-    this.saveNewStatus(this.state.newStatus)
-    this.setState({
-      newStatus: ""
+  componentWillMount() {
+    
+    /*
+    let input = this.state.username + "/";
+    let index = input + "index.json"
+    let hasInput = false
+
+    listFiles((files) => {
+     if (files.substring(0, index.length) === index) {
+      hasInput = true;
+     }
+     return true;
     })
+
+     if (!hasInput) {
+      listFiles((files) => {
+       if (files.substring(0, input.length) === input) {
+        getFile(files, options)
+        .then((file) => {
+          var data = JSON.parse(file || '{}')
+
+        })
+       }
+       return true;
+      })
+      hasInput = true;
+     }
+    */
   }
 
-  handleUploadNewFile(event) {
+
+  handleUploadNewFile = () =>  {
     // TODO: allow user to put in a text file
     // saveNewStatus(text)
     this.setState({showModal: true})
   }
 
-  handleUpload(event) {
+  handleUpload = () => {
     // scrap json data
     // to make healthchart
-
     const HealthChart = {
       userGroupId: "dummy", 
       name: "Jay",
@@ -117,17 +124,15 @@ export default class Profile extends Component {
       text: statusText.trim(),
       created_at: Date.now()
     }
-    statuses.unshift(status)
+    statuses.unshift(JSON.stringify(status))
+
     const options = { encrypt: false }
-    putFile(this.state.username + '/' + this.state.statusIndex, JSON.stringify(status), options)
-      .then(() => {
+    putFile(this.state.username + '/' + this.state.statusIndex + '.json', JSON.stringify(status), options)
+      .then(res => {
         this.setState({
           statuses: statuses
         })
       })
-
-    this.fetchdata(this.state.username + '/' + this.state.statusIndex);
-
   }
 
   handleSignOut(e) {
@@ -138,24 +143,29 @@ export default class Profile extends Component {
   // TODO refactor or delete
   fetchData(filename) {
     // distinction between someone elses and mine?
-    this.setState({ isLoading: true })
     const options = { decrypt: false}
-    var data = '[]';
     getFile(filename, options)
       .then((file) => {
-        data = JSON.parse(file || '[]')
+        var data = JSON.parse(file || '{}')
+        console.log('tyoe of data is: ' + typeof(data))
+        console.log('tyoe of data id is: ' + typeof(data.id))
+        let newData = this.state.tabledata.concat([[data.created_at, data.id]]);
+
+        // newData = this.state.tabledata;
+        console.log('yello1')
+        // newData.push([data.id, data.created_at])
+
+        console.log('yello2')
+        console.log(this.state.tabledata)
+        console.log(newData);
+        let statuses = this.state.statuses
+        statuses.unshift(data)
         this.setState({
-          person: new Person(loadUserData().profile),
-          username: loadUserData().username,
-          statusIndex: this.statusIndex + 1,
-          statuses: this.statuses + [data],
+          tabledata: newData,
+          statusIndex: this.state.statusIndex + 1,
+          statuses: statuses,
         })
       })
-      .finally(() => {
-        this.setState({ isLoading: false })
-      });
-    console.log(data)
-    // return data
   }
 
   isLocal() {
@@ -202,15 +212,19 @@ export default class Profile extends Component {
       'top': '20%',
     };
 
+    const options = {
+      'filterType': 'checkbox',
+      'onRowsSelect': this.props.onRowsSelect,
+    };
+
     return (
-      !isSignInPending() && person ?
       <div className="container">
         <div className="row">
           <div className="col-md-12">
             <div className="col-md-12">
               <div className="avatar-section">
                 <img
-                  src={ person.avatarUrl() ? person.avatarUrl() : avatarFallbackImage }
+                  src={ avatarFallbackImage }
                   className="img-rounded avatar"
                   id="avatar-image"
                 />
@@ -225,13 +239,13 @@ export default class Profile extends Component {
                   }
                 </div>
               </div>
-              <Table 
-                onRowsSelect={
-                  (currentRowsSelected: array, allRowsSelected: array) => {
-                    this.selectedRows = allRowsSelected;
-                  }}
-                data={this.data}>
-              </Table>
+
+              <MUIDataTable
+                title={this.state.title}
+                data={this.state.tabledata}
+                columns={this.state.columns}
+                options={options}
+              />
             </div>
             
             {this.isLocal() &&
@@ -240,7 +254,7 @@ export default class Profile extends Component {
                 <div className="col-md-12 text-right">
                   <button
                     className="btn btn-primary btn-lg"
-                    onClick={e => this.handleUploadNewFile(e)}
+                    onClick={this.handleUploadNewFile}
                   >
                     Upload New File
                   </button>
@@ -259,7 +273,7 @@ export default class Profile extends Component {
           onClose={this.handleCloseUploadModal}
           open={this.state.showModal} 
           style={modalStyles}>
-          <SubmitForm />
+          <SubmitForm onSubmitForm={this.handleUpload}/>
         </Modal>
         <Dialog
           open={this.state.showDialog}
@@ -289,7 +303,7 @@ export default class Profile extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-      </div> : null
+      </div>
     );
   }
 }

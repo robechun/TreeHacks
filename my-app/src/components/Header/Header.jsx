@@ -31,9 +31,6 @@ export default class Header extends Component {
             <LinkContainer to="/open" style={styles}>
               <NavItem className="navitem">Open</NavItem>
             </LinkContainer>
-            <LinkContainer to="/test" style={styles}>
-              <NavItem className="navitem">Form</NavItem>
-            </LinkContainer>
           </Nav>
           <Nav>
             <Form inline>

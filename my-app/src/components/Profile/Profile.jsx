@@ -57,7 +57,7 @@ export default class Profile extends Component {
     this.selectedRows = []
 
     this.data = [
-     ["04/03/17", "https://gaia.blockstack.org/hub/157W3DbCJZ9qKKwCCeMkKKL6D9vAfaEUWZ/from.json"],
+     ["04/03/17", "statuses.json"],
      ["03/19/16", "file2"]
     ];
   }
@@ -210,11 +210,15 @@ export default class Profile extends Component {
   handleShare = () => {
     var index;
     console.log('sent');
+    console.log(loadUserData());
+    
     for (index in this.selectedRows) {
-      blockstack.listFiles((files) => {
-       console.log(files);
-       return true;
-      })
+      let options = {username: 'robertchung.id.blockstack', decrypt: true}
+      blockstack.getFile('test_jay.json', options)
+      .then((fileContents) => {
+        console.log(fileContents);
+      });
+      // blockstack.putFile(this.data[index][1],{'encrypt': true}))
     }
     console.log('to ' + this.toSend);
   }

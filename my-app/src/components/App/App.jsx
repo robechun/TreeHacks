@@ -8,6 +8,7 @@ import {
   redirectToSignIn,
   handlePendingSignIn,
   signUserOut,
+  decryptPrivateKey
 } from 'blockstack';
 
 import Header from '../Header/Header'
@@ -55,6 +56,7 @@ export default class App extends Component {
   }
 
   render() {
+    console.log(decryptPrivateKey);
     return (
       <div className="site-wrapper">
         <div className="site-wrapper-inner">

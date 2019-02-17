@@ -65,6 +65,7 @@ export default class Profile extends Component {
     let publicKey = getPublicKeyFromPrivate(loadUserData().appPrivateKey);
     console.log(loadUserData());
     putFile(loadUserData().username + '/publickey.txt', publicKey, {encrypt: false});
+    console.log(loadUserData().username);
     let input = "kimjenna.id.blockstack/";
     listFiles((files) => {
      if (files.substring(0, input.length) === input) {

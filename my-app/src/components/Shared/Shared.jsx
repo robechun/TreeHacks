@@ -98,8 +98,8 @@ export default class Shared extends Component {
         .then(res => zone = res.api.gaiaHubUrl);
       })()
       
-      const options = { decrypt: false, username: username, zoneFileLookupURL: zone }
-      getFile('/' + currentRowsSelected[0] + '/' + fileToFetch + '.json', options)
+      const options = { decrypt: true, username: username, zoneFileLookupURL: zone }
+      getFile(username + '/' + fileToFetch + '.json', options)
       .then(res => console.log(res))    // TODO: show the stuff in a view
       .catch(err => console.log(err))
 
@@ -123,7 +123,7 @@ export default class Shared extends Component {
         console.log(fileContents)
         let tfileContents = JSON.parse(fileContents)
         
-        let _fileName = this.state.userID + '/' + this.state.fileName;
+        let _fileName = this.state.fileName;
 
         var obj = {};
         obj[_fileName] = {'id': this.state.userID, 'date': Date.now()};

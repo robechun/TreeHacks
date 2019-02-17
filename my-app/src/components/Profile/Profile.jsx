@@ -220,10 +220,14 @@ export default class Profile extends Component {
       let options = {decrypt: false, encrypt: false}
       let filename = this.data[index][1]
       if (this.toSend.length > 0) {
-        blockstack.getFile(filename, options)
-        .then((fileContents) => {
-          blockstack.putFile(this.toSend + filename, fileContents, options);
+        blockstack.getFile(this.toSend + 'publickey.txt', options)
+        .then((BPublicKey) => {
+          blockstack.getFile(filename, options)
+          .then((fileContents) => {
+            blockstack.putFile(this.toSend + filename, fileContents, {encrypt: BPublicKey});
+          })
         });
+        
         blockstack.getFile('to.json', options)
         .then((fileContents) => {
           fileContents = fileContents + this.toSend + ' => ' + filename + '\n'

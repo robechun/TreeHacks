@@ -27,12 +27,18 @@ export default class Open extends Component {
 
   render() {
     return (
-        <MUIDataTable
-            title={"Anonymized Records"}
-            data={this.state.data}
-            columns={this.state.columns}
-            // options={options}
-        />  
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <MUIDataTable
+                title={"Anonymized Records"}
+                data={this.state.data}
+                columns={this.state.columns}
+                // options={options}
+            />  
+          </div>
+        </div>
+      </div>
     )
   }
 }

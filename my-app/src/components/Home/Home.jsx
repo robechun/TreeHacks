@@ -2,17 +2,8 @@ import React, { Component, Link } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Profile from '../Profile/Profile.jsx';
 import Shared from '../Shared/Shared.jsx';
+import SubmitForm from '../SubmitForm/SubmitForm.jsx';
 import Open from '../OpenSource/Open.jsx';
-
-// const Home = (props) => (
-//   <main className="home">
-//     <Switch>
-//       <Route exact path='/' render = {(props) => <Profile {...props} />}/>
-//       <Route exact path='/profile' render = {(props) => <Profile {...props} />}/>
-//       <Route exact path='/shared' component={Shared}/>
-//     </Switch>
-//   </main>
-// )
 
 export default class Home extends Component	{
   constructor(props) {
@@ -26,6 +17,7 @@ export default class Home extends Component	{
 	      <Route exact path='/' render = {(props) => <Profile {...props} handleSignOut={this.props} />}/>
 	      <Route exact path='/profile' render = {(props) => <Profile {...props} handleSignOut={this.props} />}/>
 	      <Route exact path='/shared' component={Shared}/>
+        <Route exact path='/test' component={SubmitForm}/>
         <Route exact path='/open' component={Open}/>
 	    </Switch>
 	  </main>

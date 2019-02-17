@@ -10,7 +10,7 @@ import {
 } from 'blockstack';
 
 import Table from "../Table.jsx";
-import HealthChart from '../../models/HealthChart.jsx'
+import HealthChart from "../../models/HealthChart.jsx"
 
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
@@ -176,7 +176,7 @@ export default class Profile extends Component {
       !isSignInPending() && person ?
       <div className="container">
         <div className="row">
-          <div className="col-md-offset-3 col-md-6">
+          <div className="col-md-12">
             <div className="col-md-12">
               <div className="avatar-section">
                 <img
@@ -190,30 +190,17 @@ export default class Profile extends Component {
                   </h1>
                   {this.isLocal() &&
                     <span>
-                      &nbsp;|&nbsp;
                       <a onClick={e => handleSignOut(e)}>(Logout)</a>
                     </span>
                   }
                 </div>
               </div>
-            </div>
-
-            <div>
-            {/* This might be where we put the table in */}
               <Table></Table>
             </div>
             
             {this.isLocal() &&
               
               <div className="new-status">
-                {/*
-                <div className="col-md-12">
-                  <textarea className="input-status"
-                    value={this.state.newStatus}
-                    onChange={e => this.handleNewStatusChange(e)}
-                    placeholder="What's on your mind?"
-                  />
-                </div>*/}
                 <div className="col-md-12 text-right">
                   <button
                     className="btn btn-primary btn-lg"

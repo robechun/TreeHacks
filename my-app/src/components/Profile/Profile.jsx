@@ -9,6 +9,8 @@ import {
   signUserOut
 } from 'blockstack';
 
+import * as blockstack from 'blockstack'
+
 import Table from "../Table.jsx";
 import HealthChart from "../../models/HealthChart.jsx"
 import SubmitForm from '../SubmitForm/SubmitForm.jsx';
@@ -55,7 +57,7 @@ export default class Profile extends Component {
     this.selectedRows = []
 
     this.data = [
-     ["04/03/17", "file1"],
+     ["04/03/17", "https://gaia.blockstack.org/hub/157W3DbCJZ9qKKwCCeMkKKL6D9vAfaEUWZ/from.json"],
      ["03/19/16", "file2"]
     ];
   }
@@ -209,8 +211,10 @@ export default class Profile extends Component {
     var index;
     console.log('sent');
     for (index in this.selectedRows) {
-      
-      console.log(this.data[index])
+      blockstack.listFiles((files) => {
+       console.log(files);
+       return true;
+      })
     }
     console.log('to ' + this.toSend);
   }

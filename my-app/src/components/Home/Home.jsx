@@ -2,6 +2,7 @@ import React, { Component, Link } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Profile from '../Profile/Profile.jsx';
 import Shared from '../Shared/Shared.jsx';
+import Collab from '../Collab.jsx'
 
 // const Home = (props) => (
 //   <main className="home">
@@ -25,6 +26,7 @@ export default class Home extends Component	{
 	      <Route exact path='/' render = {(props) => <Profile {...props} handleSignOut={this.props} />}/>
 	      <Route exact path='/profile' render = {(props) => <Profile {...props} handleSignOut={this.props} />}/>
 	      <Route exact path='/shared' component={Shared}/>
+	      <Route exact path='/test' component={Collab}/>
 	    </Switch>
 	  </main>
     );

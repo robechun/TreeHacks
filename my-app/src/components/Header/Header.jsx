@@ -11,7 +11,7 @@ export default class Header extends Component {
 
   render() {
     console.log(this.props);
-    const { testFunc } = this.props;
+    const { testFunc, testClick } = this.props;
     console.log(testFunc);
     return (
       <Navbar bg="light" variant="light">
@@ -31,8 +31,8 @@ export default class Header extends Component {
             </LinkContainer>
           </Nav>
           <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <Button variant="outline-success" onClick={testFunc}>Search</Button>
+            <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={testFunc}/>
+            <Button variant="outline-success" onClick={testClick}>Search</Button>
           </Form>
         </Navbar.Collapse>
       </Navbar>

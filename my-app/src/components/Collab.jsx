@@ -31,6 +31,7 @@ export default class Collab extends Component {
         (async () => {
             await group.create();
             console.log('two');
+            console.log(group);
             const invitation = await group.makeGroupMembership(this.state.usernameToInvite);
             console.log(invitation._id); // the ID used to later activate an invitation
             // TODO: give this to the user you want to share it with

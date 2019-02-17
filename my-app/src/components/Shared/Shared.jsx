@@ -9,6 +9,16 @@ import {
   lookupProfile,
   signUserOut
 } from 'blockstack';
+import * as blockstack from 'blockstack'
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import Modal from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default class Shared extends Component {
     constructor(props) {
@@ -17,7 +27,11 @@ export default class Shared extends Component {
         this.state = {
             groups: [],
             columns: ['From', 'Path', 'Date Accessed'],
-            data: []
+            data: [],
+            showDialog: false,
+            userID: "",
+            fileName: "",
+            username: "",
         }
     }
 
@@ -90,6 +104,40 @@ export default class Shared extends Component {
       .catch(err => console.log(err))
 
     }
+
+    handleOpenDialog = () => {
+      this.setState({
+        showDialog: true,
+      })
+    }
+
+    handleCloseDialog = () => {
+      this.setState({
+        showDialog: false,
+      })
+    }
+
+    handleAdd = () => {
+      let fileName = '/' + this.state.username + '/' + this.state.fileName + '.json'
+      blockstack.getFile('from.json', {decrypt: false})
+      .then((fileContents) => {
+        fileContents = fileContents + this.state.userID + ' => ' + fileName + '\n'
+        blockstack.putFile('from.json', fileContents, {decrypt: false});
+      });
+    }
+
+    handleTextField1Change = (e) => {
+      this.setState({
+        userID: e.target.value
+      })
+    }
+
+    handleTextField2Change = (e) => {
+      this.setState({
+        fileName: e.target.value
+      })
+    }
+
   render() {
     const options = {
       selectableRows: true,
@@ -107,6 +155,52 @@ export default class Shared extends Component {
             />  
           </div>
         </div>
+        <button
+          className="btn btn-primary btn-lg"
+          onClick={this.handleOpenDialog}
+        >
+          Add
+        </button>
+        <Dialog
+          open={this.state.showDialog}
+          onClose={this.handleCloseDialog}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogContent>
+            <DialogContentText>
+              UserID
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="User ID"
+              type="text"
+              fullWidth
+              onChange={this.handleTextField1Change}
+            />
+            <DialogContentText>
+              Doc Number
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Doc"
+              type="text"
+              fullWidth
+              onChange={this.handleTextField2Change}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.handleAdd} color="primary">
+              Add
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     )
   }

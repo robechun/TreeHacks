@@ -6,7 +6,8 @@ import {
   getFile,
   putFile,
   lookupProfile,
-  signUserOut
+  signUserOut,
+  listFiles
 } from 'blockstack';
 
 import * as blockstack from 'blockstack'
@@ -25,6 +26,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import MUIDataTable from "mui-datatables";
+
+
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
 
@@ -33,98 +37,118 @@ export default class Profile extends Component {
     super(props);
 
     this.state = {
-      person: {
-        name() {
-          return 'Anonymous';
-        },
-        avatarUrl() {
-          return avatarFallbackImage;
-        },
-      },
+      title: "Medical Data",
+      tabledata: [],
       username: "",
-      newStatus: "",
-
       statuses: [],
       statusIndex: 0,
-
-      isLoading: false,
-
       showModal: false,
       showDialog: false,
-
+      showFile: false,
+      fileContents: "",
       toSend: "",
+      columns: ["Date", "File Name"],
       willOpenSource: false,
+
     };
 
     this.selectedRows = []
+    
 
-    this.data = [
-     ["04/03/17", "statuses.json"],
-     ["03/19/16", "file2"]
-    ];
-  }
-
-  componentWillMount() {
-    this.setState({
-      person: new Person(loadUserData().profile),
-      username: loadUserData().username
-    })
   }
 
   componentDidMount() {
-    this.fetchData()
-  }
-
-  // TODO refactor or delete
-  handleNewStatusChange(event) {
     this.setState({
-      newStatus: event.target.value
+      username: loadUserData().username
     })
+    let input = "kimjenna.id.blockstack/";
+    listFiles((files) => {
+     if (files.substring(0, input.length) === input) {
+      this.fetchData(files);
+     }
+     return true;
+    })
+    console.log('whee')
+    console.log(this.state.tabledata)
   }
 
-  // TODO refactor or delete
-  handleNewStatusSubmit(event) {
-    this.saveNewStatus(this.state.newStatus)
-    this.setState({
-      newStatus: ""
-    })
-  }
-
-  handleUploadNewFile(event) {
+  componentWillMount() {
     
+    /*
+    let input = this.state.username + "/";
+    let index = input + "index.json"
+    let hasInput = false
+
+    listFiles((files) => {
+     if (files.substring(0, index.length) === index) {
+      hasInput = true;
+     }
+     return true;
+    })
+
+     if (!hasInput) {
+      listFiles((files) => {
+       if (files.substring(0, input.length) === input) {
+        getFile(files, options)
+        .then((file) => {
+          var data = JSON.parse(file || '{}')
+
+        })
+       }
+       return true;
+      })
+      hasInput = true;
+     }
+    */
+  }
+
+
+  handleUploadNewFile = () =>  {
     // TODO: allow user to put in a text file
     // saveNewStatus(text)
-    const HealthChart = {
-      userGroupId: "dummy", 
-      name: "Jay",
-      age: 13,
-      date: Date.now(),
-      symptoms: "hi",
-      dianosis: "hi",
-      treatment: "hi"
-    }
-    this.saveNewStatus(JSON.stringify(HealthChart))
-
     this.setState({showModal: true})
+  }
+
+  handleUpload = (fname,lname,age,date,symp,diag,treat) => {
+    console.log(fname);
+    console.log(lname);
+    console.log(age);
+    console.log(date);
+    console.log(symp);
+    console.log(diag);
+    console.log(treat);
+    const HealthChart = {
+      userGroupId: fname, 
+      name: lname,
+      age: age,
+      date:date,
+      symptoms: symp,
+      dianosis: diag,
+      treatment: treat
+    }
+
+    this.saveNewStatus(JSON.stringify(HealthChart))
   }
 
   // TODO refactor or delete
   saveNewStatus = (statusText) => {
-    let statuses = this.state.statuses
+    //let statuses = this.state.statuses
     let status = {
       id: this.state.statusIndex++,
       text: statusText.trim(),
       created_at: Date.now()
     }
+    //statuses.unshift(JSON.stringify(status))
 
-    statuses.unshift(status)
     const options = { encrypt: false }
-    putFile('statuses.json', JSON.stringify(statuses), options)
-      .then(() => {
+    putFile(this.state.username + '/' + this.state.statusIndex + '.json', JSON.stringify(status), options)
+      .then(res => {
         this.setState({
-          statuses: statuses
+          //statuses: statuses
         })
       })
+    this.fetchData(this.state.username + '/' + this.state.statusIndex + '.json')
+    this.render()
   }
 
   handleSignOut(e) {
@@ -133,60 +157,31 @@ export default class Profile extends Component {
   }
   
   // TODO refactor or delete
-  fetchData() {
-    // use invitationKey to access the pool
-    // query the pool
-    // and get document
-    // save document on my local file aka handleUploadNewFile on my part
-
-    this.setState({ isLoading: true })
-    const options = { decrypt: false, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' }
-    getFile('statuses.json', options)
+  fetchData(filename) {
+    // distinction between someone elses and mine?
+    const options = { decrypt: false}
+    getFile(filename, options)
       .then((file) => {
-        var statuses = JSON.parse(file || '[]')
+        var data = JSON.parse(file || '{}')
+        console.log('tyoe of data is: ' + typeof(data))
+        console.log('tyoe of data id is: ' + typeof(data.id))
+        let newData = this.state.tabledata.concat([[data.created_at, data.id]]);
+
+        // newData = this.state.tabledata;
+        console.log('yello1')
+        // newData.push([data.id, data.created_at])
+
+        console.log('yello2')
+        console.log(this.state.tabledata)
+        console.log(newData);
+        let statuses = this.state.statuses
+        statuses.unshift(data)
         this.setState({
-          person: new Person(loadUserData().profile),
-          username: loadUserData().username,
-          statusIndex: statuses.length,
+          tabledata: newData,
+          statusIndex: this.state.statusIndex + 1,
           statuses: statuses,
         })
       })
-      .finally(() => {
-        this.setState({ isLoading: false })
-      });
-    /*} else {
-      const username = this.props.match.params.username
-      this.setState({ isLoading: true })
-
-      lookupProfile(username)
-        .then((profile) => {
-          this.setState({
-            person: new Person(profile),
-            username: username
-          })
-        })
-        .catch((error) => {
-          console.log('could not resolve profile')
-        })
-
-      const options = { username: username, decrypt: false, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/'}
-
-      getFile(statusFileName, options)
-        .then((file) => {
-          var statuses = JSON.parse(file || '[]')
-          this.setState({
-            statusIndex: statuses.length,
-            statuses: statuses
-          })
-        })
-        .catch((error) => {
-          console.log('could not fetch statuses')
-        })
-        .finally(() => {
-          this.setState({ isLoading: false })
-        })
-      }
-      */
   }
 
   isLocal() {
@@ -207,6 +202,14 @@ export default class Profile extends Component {
 
   handleOpenShareDialog = () => {
     this.setState({ showDialog: true });
+  };
+
+  handleCloseFileDialog = () => {
+    this.setState({ showFile: false });
+  };
+
+  handleOpenFileDialog = () => {
+    this.setState({ showFile: true });
   };
 
   handleShare = () => {
@@ -243,6 +246,23 @@ export default class Profile extends Component {
     console.log(checked);
   }
 
+  onRowsSelect = (currentRowsSelected: array, allRowsSelected: array) => {
+    this.selectedRows = allRowsSelected;
+  }
+
+  onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
+    if (this.selectedRows.length === 0) {
+      let filename = this.state.username + '/' + rowData[1] + '.json';
+      blockstack.getFile(filename, {decrypt: false})
+      .then((fileContentz) => {
+        this.setState({
+          showFile: true,
+          fileContents: fileContentz,
+        })
+      });   
+    }
+  }
+
   render() {
     const { handleSignOut } = this.props.handleSignOut;
     const { person } = this.state;
@@ -253,15 +273,20 @@ export default class Profile extends Component {
       'top': '20%',
     };
 
+    const options = {
+      'filterType': 'checkbox',
+      'onRowsSelect': this.onRowsSelect,
+      'onRowClick': this.onRowClick,
+    };
+
     return (
-      !isSignInPending() && person ?
       <div className="container">
         <div className="row">
           <div className="col-md-12">
             <div className="col-md-12">
               <div className="avatar-section">
                 <img
-                  src={ person.avatarUrl() ? person.avatarUrl() : avatarFallbackImage }
+                  src={ avatarFallbackImage }
                   className="img-rounded avatar"
                   id="avatar-image"
                 />
@@ -276,13 +301,13 @@ export default class Profile extends Component {
                   }
                 </div>
               </div>
-              <Table 
-                onRowsSelect={
-                  (currentRowsSelected: array, allRowsSelected: array) => {
-                    this.selectedRows = allRowsSelected;
-                  }}
-                data={this.data}>
-              </Table>
+
+              <MUIDataTable
+                title={this.state.title}
+                data={this.state.tabledata}
+                columns={this.state.columns}
+                options={options}
+              />
             </div>
             
             {this.isLocal() &&
@@ -291,7 +316,7 @@ export default class Profile extends Component {
                 <div className="col-md-12 text-right">
                   <button
                     className="btn btn-primary btn-lg"
-                    onClick={e => this.handleUploadNewFile(e)}
+                    onClick={this.handleUploadNewFile}
                   >
                     Upload New File
                   </button>
@@ -310,7 +335,7 @@ export default class Profile extends Component {
           onClose={this.handleCloseUploadModal}
           open={this.state.showModal} 
           style={modalStyles}>
-          <SubmitForm />
+          <SubmitForm onSubmitForm={this.handleUpload}/>
         </Modal>
         <Dialog
           open={this.state.showDialog}
@@ -344,7 +369,26 @@ export default class Profile extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-      </div> : null
+
+        <Dialog
+          fullScreen
+          open={this.state.showFile}
+          scroll='paper'
+          onClose={this.handleCloseFileDialog}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogContent>
+            <DialogContentText>
+              {this.state.fileContents}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseFileDialog} color="primary">
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     );
   }
 }

@@ -25,17 +25,17 @@ export default class Shared extends Component {
     // <prefix>/<owner_address>/from.json
     componentDidMount = () => {
 
-      let obj = {
-        '1': {
-          id: 'robert',
-          date: '123456'
-        },
-        '2': {
-          id: 'bobert',
-          date: '66314'
-        }
-      }
-
+      // let obj = {
+      //   '1': {
+      //     id: 'kimjenna',
+      //     date: Date.now()
+      //   },
+      //   '2': {
+      //     id: 'jimothy29',
+      //     date: Date.now()
+      //   }
+      // }
+      // putFile('test_jay.json', JSON.stringify(obj), { encrypt: '0345cfc049b757cf5a8432646efb8cdd7c804a1ba25c2d10f1db67a0f90d8d1679' })
     
       // Fetch from your local `from` mapping, decrypt it with your private key, and populate the database.
       const options = { decrypt: true }; //, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' } TODO: might need zonefile
@@ -72,10 +72,23 @@ export default class Shared extends Component {
 
     handleRowClick = (currentRowsSelected, allRowsSelected) => {
       console.log(currentRowsSelected);
+
+      let zone = '';
+      let username = currentRowsSelected[0] + '.id.blockstack';
+      let fileToFetch = currentRowsSelected[1];
+
+      (async () => {
+        await lookupProfile(username)
+        .then(res => zone = res.api.gaiaHubUrl);
+      })()
+      
+      const options = { decrypt: false, username: username, zoneFileLookupURL: zone }
+      getFile('/' + currentRowsSelected[0] + '/' + fileToFetch + '.json', options)
+      .then(res => console.log(res))    // TODO: show the stuff in a view
+      .catch(err => console.log(err))
+
     }
   render() {
-    console.log('rendering')
-
     const options = {
       selectableRows: true,
       onRowClick: this.handleRowClick

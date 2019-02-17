@@ -21,6 +21,10 @@ export default class App extends Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      called: false
+    }
   
   }
 
@@ -87,5 +91,14 @@ export default class App extends Component {
         window.location = window.location.origin;
       });
     }
+    if (isUserSignedIn() && !this.state.called) {
+      (async () => {
+        console.log('please sign in');
+        await User.createWithCurrentUser();
+        console.log('please sign in2');
+        this.setState({ called: true });
+      })();
+    }
   }
+  
 }

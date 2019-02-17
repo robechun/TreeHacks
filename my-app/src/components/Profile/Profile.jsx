@@ -7,7 +7,8 @@ import {
   putFile,
   lookupProfile,
   signUserOut,
-  listFiles
+  listFiles,
+  getPublicKeyFromPrivate,
 } from 'blockstack';
 
 import * as blockstack from 'blockstack'
@@ -61,6 +62,9 @@ export default class Profile extends Component {
     this.setState({
       username: loadUserData().username
     })
+    let publicKey = getPublicKeyFromPrivate(loadUserData().appPrivateKey);
+    console.log(loadUserData());
+    putFile(loadUserData().username + 'publickey.txt', publicKey, {decrypt: false});
     let input = "kimjenna.id.blockstack/";
     listFiles((files) => {
      if (files.substring(0, input.length) === input) {
@@ -68,38 +72,10 @@ export default class Profile extends Component {
      }
      return true;
     })
-    console.log('whee')
-    console.log(this.state.tabledata)
   }
 
   componentWillMount() {
     
-    /*
-    let input = this.state.username + "/";
-    let index = input + "index.json"
-    let hasInput = false
-
-    listFiles((files) => {
-     if (files.substring(0, index.length) === index) {
-      hasInput = true;
-     }
-     return true;
-    })
-
-     if (!hasInput) {
-      listFiles((files) => {
-       if (files.substring(0, input.length) === input) {
-        getFile(files, options)
-        .then((file) => {
-          var data = JSON.parse(file || '{}')
-
-        })
-       }
-       return true;
-      })
-      hasInput = true;
-     }
-    */
   }
 
 
@@ -132,23 +108,27 @@ export default class Profile extends Component {
 
   // TODO refactor or delete
   saveNewStatus = (statusText) => {
-    //let statuses = this.state.statuses
     let status = {
-      id: this.state.statusIndex++,
+      id: this.state.statusIndex,
       text: statusText.trim(),
       created_at: Date.now()
     }
-    //statuses.unshift(JSON.stringify(status))
+    console.log(this.state.statusIndex)
+    let statuses = this.state.statuses.concat([JSON.stringify(status)]);
+    let newData = this.state.tabledata.concat([[status.created_at, status.id]])
+    newData.sort((a, b) => a[1] - b[1])
 
     const options = { encrypt: false }
-    putFile(this.state.username + '/' + this.state.statusIndex + '.json', JSON.stringify(status), options)
+    putFile(this.state.username + '/' + (this.state.statusIndex + 1) + '.json', JSON.stringify(status), options)
       .then(res => {
         this.setState({
-          //statuses: statuses
+          statuses: statuses,
+          tabledata: newData,
+          statusIndex: this.state.statusIndex + 1
         })
       })
-    this.fetchData(this.state.username + '/' + this.state.statusIndex + '.json')
-    this.render()
+    // this.fetchData(this.state.username + '/' + this.state.statusIndex + '.json')
+
   }
 
   handleSignOut(e) {
@@ -163,19 +143,9 @@ export default class Profile extends Component {
     getFile(filename, options)
       .then((file) => {
         var data = JSON.parse(file || '{}')
-        console.log('tyoe of data is: ' + typeof(data))
-        console.log('tyoe of data id is: ' + typeof(data.id))
         let newData = this.state.tabledata.concat([[data.created_at, data.id]]);
-
-        // newData = this.state.tabledata;
-        console.log('yello1')
-        // newData.push([data.id, data.created_at])
-
-        console.log('yello2')
-        console.log(this.state.tabledata)
-        console.log(newData);
-        let statuses = this.state.statuses
-        statuses.unshift(data)
+        let statuses = this.state.statuses.concat([data]);
+        newData.sort((a, b) => a[1] - b[1])
         this.setState({
           tabledata: newData,
           statusIndex: this.state.statusIndex + 1,
@@ -252,7 +222,8 @@ export default class Profile extends Component {
 
   onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
     if (this.selectedRows.length === 0) {
-      let filename = this.state.username + '/' + rowData[1] + '.json';
+
+      let filename = this.state.username + '/' + (rowData[1]+1) + '.json';
       blockstack.getFile(filename, {decrypt: false})
       .then((fileContentz) => {
         this.setState({

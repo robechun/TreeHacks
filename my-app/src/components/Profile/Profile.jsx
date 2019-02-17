@@ -209,18 +209,13 @@ export default class Profile extends Component {
 
   handleShare = () => {
     var index;
-    console.log('sent');
-    console.log(loadUserData());
-    
     for (index in this.selectedRows) {
-      let options = {username: 'robertchung.id.blockstack', decrypt: true}
-      blockstack.getFile('test_jay.json', options)
+      let options = {decrypt: false}
+      blockstack.getFile(this.data[index][1], {decrypt: false})
       .then((fileContents) => {
-        console.log(fileContents);
+        blockstack.putFile(this.toSend + this.data[index][1], fileContents, options);
       });
-      // blockstack.putFile(this.data[index][1],{'encrypt': true}))
     }
-    console.log('to ' + this.toSend);
   }
 
   handleTextFieldChange = (e) => {

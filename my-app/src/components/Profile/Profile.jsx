@@ -5,7 +5,8 @@ import {
   Person,
   getFile,
   putFile,
-  lookupProfile
+  lookupProfile,
+  signUserOut
 } from 'blockstack';
 
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
@@ -60,6 +61,11 @@ export default class Profile extends Component {
     this.setState({
       newStatus: ""
     })
+  }
+
+  handleSignOut(e) {
+    e.preventDefault();
+    signUserOut(window.location.origin);
   }
 
   // TODO refactor or delete
@@ -139,7 +145,6 @@ export default class Profile extends Component {
   }
 
   render() {
-    const { handleSignOut } = this.props;
     const { person } = this.state;
     const { username } = this.state;
 
@@ -164,7 +169,7 @@ export default class Profile extends Component {
                   {this.isLocal() &&
                     <span>
                       &nbsp;|&nbsp;
-                      <a onClick={ handleSignOut.bind(this) }>(Logout)</a>
+                      <a onClick={ e => this.handleSignOut(e) }>(Logout)</a>
                     </span>
                   }
                 </div>

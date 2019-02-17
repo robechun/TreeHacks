@@ -1,7 +1,7 @@
 import React, { Component, Link } from 'react';
-import Profile from '../views/Profile.jsx';
-import Signin from './Signin.jsx';
-import Collab from '../views/Collab.jsx';
+import Profile from '../Profile/Profile.jsx';
+import Signin from '../Signin.jsx';
+import Collab from '../Collab.jsx';
 import {
   isSignInPending,
   isUserSignedIn,

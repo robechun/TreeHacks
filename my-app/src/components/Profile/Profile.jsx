@@ -16,6 +16,7 @@ import HealthChart from "../../models/HealthChart.jsx"
 import SubmitForm from '../SubmitForm/SubmitForm.jsx';
 
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
 import Dialog from '@material-ui/core/Dialog';
@@ -52,6 +53,7 @@ export default class Profile extends Component {
       showDialog: false,
 
       toSend: "",
+      willOpenSource: false,
     };
 
     this.selectedRows = []
@@ -211,15 +213,28 @@ export default class Profile extends Component {
     var index;
     for (index in this.selectedRows) {
       let options = {decrypt: false}
-      blockstack.getFile(this.data[index][1], {decrypt: false})
-      .then((fileContents) => {
-        blockstack.putFile(this.toSend + this.data[index][1], fileContents, options);
-      });
+      if (this.toSend.length > 0) {
+        blockstack.getFile(this.data[index][1], {decrypt: false})
+        .then((fileContents) => {
+          blockstack.putFile(this.toSend + this.data[index][1], fileContents, options);
+        });
+      }
+      if (this.willOpenSource) {
+        blockstack.getFile(this.data[index][1], {decrypt: false})
+        .then((fileContents) => {
+          blockstack.putFile('openSource' + this.data[index][1], fileContents, options);
+        });
+      }
     }
   }
 
   handleTextFieldChange = (e) => {
     this.toSend = e.target.value;
+  }
+
+  handleCheckboxChange = (e, checked) => {
+    this.willOpenSource = checked;
+    console.log(checked);
   }
 
   render() {
@@ -309,6 +324,10 @@ export default class Profile extends Component {
               fullWidth
               onChange={this.handleTextFieldChange}
             />
+            <Checkbox
+            id="checkbox"
+            onChange={this.handleCheckboxChange}
+            label="Open Source?"></Checkbox><font size="3" color="black">Open Source?</font>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleCloseShareDialog} color="primary">

@@ -9,7 +9,7 @@ function RecordForm() {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Health Record
+        New Health Record
       </Typography>
       <Grid container spacing={24}>
         <Grid item xs={12} sm={6}>

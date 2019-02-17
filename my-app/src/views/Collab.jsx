@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { UserGroup } from 'radiks';
 import Button from '@material-ui/core/Button'
 import Input from '@material-ui/core/Input'
+
 import * as blockstack from 'blockstack'
 
 
@@ -24,7 +25,7 @@ export default class Collab extends Component {
     }
     
     handleShare = () => {
-        const group = new UserGroup({ name: 'records-health-' + blockstack.loadUserData().then(profile => profile.name) }); 
+        const group = new UserGroup({ name: 'records-health-' + blockstack.loadUserData().profile.name }); 
         console.log(group);
 
         (async () => {

@@ -7,16 +7,20 @@ export default class Shared extends Component {
         super(props);
 
         this.state = {
-            groups = [],
-            columns = ['Blockstack ID'],
-            data = []
+            groups : [],
+            columns : ['Blockstack ID'],
+            data : []
         }
     }
 
     componentDidMount = () => {
         (async () => {
             const groups = await UserGroup.myGroups();
+            console.log('in the component mount of shared')
             console.log(groups);
+            console.log('in the component mount of shared')
+            
+
             // TODO: populate table with group stuff
         })();
     }
@@ -26,7 +30,7 @@ export default class Shared extends Component {
         <MUIDataTable
             title={"Records shared with me"}
             data={this.state.data}
-            columns={colthis.state.columns}
+            columns={this.state.columns}
             // options={options}
         />  
     )

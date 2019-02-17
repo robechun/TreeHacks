@@ -172,35 +172,29 @@ export default class Profile extends Component {
               </div>
             </div>
             {/* This might be where we put the table in */}
+            <div>
+              <Table></Table>
+            </div>
             
             {this.isLocal() &&
               <div className="new-status">
-                <div className="col-md-12">
+                {/*<div className="col-md-12">
                   <textarea className="input-status"
                     value={this.state.newStatus}
                     onChange={e => this.handleNewStatusChange(e)}
                     placeholder="What's on your mind?"
                   />
-                </div>
+                </div>*/}
                 <div className="col-md-12 text-right">
                   <button
                     className="btn btn-primary btn-lg"
                     onClick={e => this.handleNewStatusSubmit(e)}
                   >
-                    Submit
+                    Upload New File
                   </button>
                 </div>
               </div>
             }
-            <div className="col-md-12 statuses">
-            {this.state.isLoading && <span>Loading...</span>}
-            {this.state.statuses.map((status) => (
-                <div className="status" key={status.id}>
-                  {status.text}
-                </div>
-                )
-            )}
-            </div>
           </div>
         </div>
       </div> : null

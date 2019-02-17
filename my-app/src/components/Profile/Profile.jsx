@@ -109,7 +109,7 @@ export default class Profile extends Component {
   // TODO refactor or delete
   saveNewStatus = (statusText) => {
     let status = {
-      id: this.state.statusIndex - 1,
+      id: this.state.statusIndex,
       text: statusText.trim(),
       created_at: Date.now()
     }
@@ -119,7 +119,7 @@ export default class Profile extends Component {
     newData.sort((a, b) => a[1] - b[1])
 
     const options = { encrypt: false }
-    putFile(this.state.username + '/' + this.state.statusIndex + '.json', JSON.stringify(status), options)
+    putFile(this.state.username + '/' + (this.state.statusIndex + 1) + '.json', JSON.stringify(status), options)
       .then(res => {
         this.setState({
           statuses: statuses,

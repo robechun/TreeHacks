@@ -44,6 +44,8 @@ export default class Profile extends Component {
       statusIndex: 0,
       showModal: false,
       showDialog: false,
+      showFile: false,
+      fileContents: "",
       toSend: "",
       columns: ["Date", "File Name"],
       willOpenSource: false,
@@ -202,6 +204,14 @@ export default class Profile extends Component {
     this.setState({ showDialog: true });
   };
 
+  handleCloseFileDialog = () => {
+    this.setState({ showFile: false });
+  };
+
+  handleOpenFileDialog = () => {
+    this.setState({ showFile: true });
+  };
+
   handleShare = () => {
     var index;
     for (index in this.selectedRows) {
@@ -236,6 +246,23 @@ export default class Profile extends Component {
     console.log(checked);
   }
 
+  onRowsSelect = (currentRowsSelected: array, allRowsSelected: array) => {
+    this.selectedRows = allRowsSelected;
+  }
+
+  onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
+    if (this.selectedRows.length === 0) {
+      let filename = this.state.username + '/' + rowData[1] + '.json';
+      blockstack.getFile(filename, {decrypt: false})
+      .then((fileContentz) => {
+        this.setState({
+          showFile: true,
+          fileContents: fileContentz,
+        })
+      });   
+    }
+  }
+
   render() {
     const { handleSignOut } = this.props.handleSignOut;
     const { person } = this.state;
@@ -248,8 +275,8 @@ export default class Profile extends Component {
 
     const options = {
       'filterType': 'checkbox',
-      'onRowsSelect': this.props.onRowsSelect,
-      'onRowClick': this.props.onRowClick,
+      'onRowsSelect': this.onRowsSelect,
+      'onRowClick': this.onRowClick,
     };
 
     return (
@@ -339,6 +366,25 @@ export default class Profile extends Component {
             </Button>
             <Button onClick={this.handleShare} color="primary">
               Send
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          fullScreen
+          open={this.state.showFile}
+          scroll='paper'
+          onClose={this.handleCloseFileDialog}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogContent>
+            <DialogContentText>
+              {this.state.fileContents}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseFileDialog} color="primary">
+              Cancel
             </Button>
           </DialogActions>
         </Dialog>

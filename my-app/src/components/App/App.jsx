@@ -20,14 +20,12 @@ import { Switch, Route } from 'react-router-dom'
 export default class App extends Component {
 
   constructor(props) {
-  	super(props);
+    super(props);
 
     this.toggle = this.toggle.bind(this);
     this.state = {
       isOpen: false
     };
-
-    
   }
 
   toggle() {
@@ -36,24 +34,6 @@ export default class App extends Component {
     });
   }
 
-  // handleSignIn = (e) =>  {
-  //   if (isSignInPending()) {
-  //     console.log('zero')
-  //     (async () => {
-  //       console.log('one')
-  //       await handlePendingSignIn();
-  //     })();
-  //     (async () => {
-  //       console.log('two')
-  //       await User.createWithCurrentUser();
-  //     })();
-  //   } else {
-  //     e.preventDefault();
-  //     const origin = window.location.origin
-  //     redirectToSignIn(origin, origin + '/manifest.json', ['store_write', 'publish_data'])
-  //   }
-  // }
-  
   handlePendingSignIn = async (e) => {
     if (isSignInPending()) {
       await handlePendingSignIn();
@@ -70,6 +50,10 @@ export default class App extends Component {
     signUserOut(window.location.origin);
   }
 
+  testFunc(text) {
+    console.log('hi');
+  }
+
   render() {
     return (
       <div className="site-wrapper">
@@ -78,7 +62,7 @@ export default class App extends Component {
             <Signin handleSignIn={ this.handlePendingSignIn } />
             : 
             <div>
-              <Header/>
+              <Header testFunc = {this.testFunc} />
               <Home handleSignOut={ this.handleSignOut }/>
             </div>
           }
@@ -86,7 +70,7 @@ export default class App extends Component {
       </div>
     )
   }
-
+  
   componentWillMount() {
     if (isSignInPending()) {
       handlePendingSignIn().then((userData) => {

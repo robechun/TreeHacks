@@ -69,9 +69,15 @@ export default class Profile extends Component {
   }
 
   handleUploadNewFile(event) {
-    
     // TODO: allow user to put in a text file
     // saveNewStatus(text)
+    this.setState({showModal: true})
+  }
+
+  handleUpload(event) {
+    // scrap json data
+    // to make healthchart
+
     const HealthChart = {
       userGroupId: "dummy", 
       name: "Jay",
@@ -81,9 +87,8 @@ export default class Profile extends Component {
       dianosis: "hi",
       treatment: "hi"
     }
-    this.saveNewStatus(JSON.stringify(HealthChart))
 
-    this.setState({showModal: true})
+    this.saveNewStatus(JSON.stringify(HealthChart))
   }
 
   // TODO refactor or delete
@@ -94,15 +99,17 @@ export default class Profile extends Component {
       text: statusText.trim(),
       created_at: Date.now()
     }
-
     statuses.unshift(status)
     const options = { encrypt: false }
-    putFile('statuses.json', JSON.stringify(statuses), options)
+    putFile(this.state.username + '/' + this.state.statusIndex, JSON.stringify(status), options)
       .then(() => {
         this.setState({
           statuses: statuses
         })
       })
+
+    this.fetchdata(this.state.username + '/' + this.state.statusIndex);
+
   }
 
   handleSignOut(e) {
@@ -111,60 +118,26 @@ export default class Profile extends Component {
   }
   
   // TODO refactor or delete
-  fetchData() {
-    // use invitationKey to access the pool
-    // query the pool
-    // and get document
-    // save document on my local file aka handleUploadNewFile on my part
-
+  fetchData(filename) {
+    // distinction between someone elses and mine?
     this.setState({ isLoading: true })
-    const options = { decrypt: false, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' }
-    getFile('statuses.json', options)
+    const options = { decrypt: false}
+    var data = '[]';
+    getFile(filename, options)
       .then((file) => {
-        var statuses = JSON.parse(file || '[]')
+        data = JSON.parse(file || '[]')
         this.setState({
           person: new Person(loadUserData().profile),
           username: loadUserData().username,
-          statusIndex: statuses.length,
-          statuses: statuses,// prefix owner address/username/index
+          statusIndex: this.statusIndex + 1,
+          statuses: this.statuses + [data],
         })
       })
       .finally(() => {
         this.setState({ isLoading: false })
       });
-    /*} else {
-      const username = this.props.match.params.username
-      this.setState({ isLoading: true })
-
-      lookupProfile(username)
-        .then((profile) => {
-          this.setState({
-            person: new Person(profile),
-            username: username
-          })
-        })
-        .catch((error) => {
-          console.log('could not resolve profile')
-        })
-
-      const options = { username: username, decrypt: false, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/'}
-
-      getFile(statusFileName, options)
-        .then((file) => {
-          var statuses = JSON.parse(file || '[]')
-          this.setState({
-            statusIndex: statuses.length,
-            statuses: statuses
-          })
-        })
-        .catch((error) => {
-          console.log('could not fetch statuses')
-        })
-        .finally(() => {
-          this.setState({ isLoading: false })
-        })
-      }
-      */
+    console.log(data)
+    // return data
   }
 
   isLocal() {

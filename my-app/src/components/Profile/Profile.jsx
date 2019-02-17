@@ -10,6 +10,8 @@ import {
 } from 'blockstack';
 
 import Table from "../Table.jsx";
+import { UserGroup } from 'radiks';
+
 
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
@@ -65,6 +67,27 @@ export default class Profile extends Component {
     })
   }
 
+  handleUploadNewFile(event) {
+    // TODO: allow user to put in a text file
+    saveNewStatus(text)
+    const group = new UserGroup({ name: 'records-health-' + blockstack.loadUserData().profile.name + this.state.statusIndex}); 
+    console.log(group);
+
+    (async () => {
+        await group.create();
+        console.log('two');
+        const invitation = await group.makeGroupMembership(this.state.usernameToInvite);
+        console.log(invitation._id); // the ID used to later activate an invitation
+        // TODO: give this to the user you want to share it with
+    })();
+  }
+
+
+  handleSignOut(e) {
+    e.preventDefault();
+    signUserOut(window.location.origin);
+  }
+
   // TODO refactor or delete
   saveNewStatus(statusText) {
     let statuses = this.state.statuses
@@ -77,7 +100,7 @@ export default class Profile extends Component {
 
     statuses.unshift(status)
     const options = { encrypt: false }
-    putFile(statusFileName, JSON.stringify(statuses), options)
+    putFile('statuses.json', JSON.stringify(statuses), options)
       .then(() => {
         this.setState({
           statuses: statuses
@@ -87,10 +110,10 @@ export default class Profile extends Component {
 
   // TODO refactor or delete
   fetchData() {
-    if (this.isLocal()) {
+    // if (this.isLocal()) {
       this.setState({ isLoading: true })
-      const options = { decrypt: false, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' }
-      getFile(statusFileName, options)
+      const options = { decrypt: false}, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' }
+      getFile('statuses.json', options)
         .then((file) => {
           var statuses = JSON.parse(file || '[]')
           this.setState({
@@ -103,7 +126,8 @@ export default class Profile extends Component {
         .finally(() => {
           this.setState({ isLoading: false })
         })
-    } else {
+    // } else {
+      { /*
       const username = this.props.match.params.username
       this.setState({ isLoading: true })
 
@@ -134,7 +158,8 @@ export default class Profile extends Component {
         .finally(() => {
           this.setState({ isLoading: false })
         })
-    }
+      */}
+    // }
   }
 
   isLocal() {
@@ -171,14 +196,17 @@ export default class Profile extends Component {
                 </div>
               </div>
             </div>
-            {/* This might be where we put the table in */}
+
             <div>
+            {/* This might be where we put the table in */}
               <Table></Table>
             </div>
             
             {this.isLocal() &&
+              
               <div className="new-status">
-                {/*<div className="col-md-12">
+                {/*
+                <div className="col-md-12">
                   <textarea className="input-status"
                     value={this.state.newStatus}
                     onChange={e => this.handleNewStatusChange(e)}
@@ -188,7 +216,7 @@ export default class Profile extends Component {
                 <div className="col-md-12 text-right">
                   <button
                     className="btn btn-primary btn-lg"
-                    onClick={e => this.handleNewStatusSubmit(e)}
+                    onClick={e => this.handleUploadNewFile(e)}
                   >
                     Upload New File
                   </button>

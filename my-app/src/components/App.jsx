@@ -60,6 +60,8 @@ export default class App extends Component {
           { !isUserSignedIn() ?
             <Signin handleSignIn={ this.handlePendingSignIn } />
             : 
+            // add div and move collab
+            <div>
             <Switch>
               <Route 
                 path='/:username?' 
@@ -68,10 +70,15 @@ export default class App extends Component {
                 } 
               />
             </Switch>
+            <Collab></Collab>
+            </div>
           }
+<<<<<<< HEAD
           <Collab></Collab>
           <ActivateInvitation></ActivateInvitation>
           <Shared></Shared>
+=======
+>>>>>>> reactRefactor
         </div>
       </div>
     );

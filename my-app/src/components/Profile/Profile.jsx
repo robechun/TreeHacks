@@ -12,7 +12,15 @@ import {
 import Table from "../Table.jsx";
 import HealthChart from "../../models/HealthChart.jsx"
 import SubmitForm from '../SubmitForm/SubmitForm.jsx';
+
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
@@ -39,13 +47,16 @@ export default class Profile extends Component {
       isLoading: false,
 
       showModal: false,
+      showDialog: false,
+
+      toSend: "",
     };
 
     this.selectedRows = []
 
     this.data = [
-     ["04/03/17", "Most Recent File", "jaylee29"],
-     ["03/19/16", "Im Sick", "jaylee29, robertchung"]
+     ["04/03/17", "file1"],
+     ["03/19/16", "file2"]
     ];
   }
 
@@ -178,15 +189,34 @@ export default class Profile extends Component {
     return this.props.match.params.username ? false : true
   }
 
-  handleClose = () => {
+  handleCloseUploadModal = () => {
     this.setState({ showModal: false });
+  };
+
+  handleOpenUploadModal = () => {
+    this.setState({ showModal: true });
+  };
+
+  handleCloseShareDialog = () => {
+    this.setState({ showDialog: false });
+  };
+
+  handleOpenShareDialog = () => {
+    this.setState({ showDialog: true });
   };
 
   handleShare = () => {
     var index;
+    console.log('sent');
     for (index in this.selectedRows) {
+      
       console.log(this.data[index])
     }
+    console.log('to ' + this.toSend);
+  }
+
+  handleTextFieldChange = (e) => {
+    this.toSend = e.target.value;
   }
 
   render() {
@@ -222,10 +252,12 @@ export default class Profile extends Component {
                   }
                 </div>
               </div>
-              <Table onRowsSelect={
-                (currentRowsSelected: array, allRowsSelected: array) => {
-                  this.selectedRows = allRowsSelected;
-                }}>
+              <Table 
+                onRowsSelect={
+                  (currentRowsSelected: array, allRowsSelected: array) => {
+                    this.selectedRows = allRowsSelected;
+                  }}
+                data={this.data}>
               </Table>
             </div>
             
@@ -241,7 +273,7 @@ export default class Profile extends Component {
                   </button>
                   <button
                     className="btn btn-primary btn-lg"
-                    onClick={e => this.handleShare(e)}
+                    onClick={this.handleOpenShareDialog}
                   >
                     Share
                   </button>
@@ -251,11 +283,39 @@ export default class Profile extends Component {
           </div>
         </div>
         <Modal 
-          onClose={this.handleClose}
+          onClose={this.handleCloseUploadModal}
           open={this.state.showModal} 
           style={modalStyles}>
           <SubmitForm />
         </Modal>
+        <Dialog
+          open={this.state.showDialog}
+          onClose={this.handleCloseShareDialog}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogContent>
+            <DialogContentText>
+              Send to...
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="User ID"
+              type="text"
+              fullWidth
+              onChange={this.handleTextFieldChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseShareDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.handleShare} color="primary">
+              Send
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div> : null
     );
   }

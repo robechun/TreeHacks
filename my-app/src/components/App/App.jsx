@@ -25,7 +25,7 @@ export default class App extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      isOpen: false
+      called: false
     };
   }
 
@@ -77,6 +77,14 @@ export default class App extends Component {
       handlePendingSignIn().then((userData) => {
         window.location = window.location.origin;
       });
+    }
+    if (isUserSignedIn() && !this.state.called) {
+      (async () => {
+        console.log('please sign in');
+        await User.createWithCurrentUser();
+        console.log('please sign in2');
+        this.setState({ called: true });
+      })();
     }
   }
 }

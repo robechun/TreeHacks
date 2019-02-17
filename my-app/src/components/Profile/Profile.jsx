@@ -65,11 +65,6 @@ export default class Profile extends Component {
     })
   }
 
-  handleSignOut(e) {
-    e.preventDefault();
-    signUserOut(window.location.origin);
-  }
-
   // TODO refactor or delete
   saveNewStatus(statusText) {
     let statuses = this.state.statuses
@@ -147,6 +142,7 @@ export default class Profile extends Component {
   }
 
   render() {
+    const { handleSignOut } = this.props;
     const { person } = this.state;
     const { username } = this.state;
 
@@ -169,7 +165,7 @@ export default class Profile extends Component {
                   {this.isLocal() &&
                     <span>
                       &nbsp;|&nbsp;
-                      <a onClick={ e => this.handleSignOut(e) }>(Logout)</a>
+                      <a onClick={ handleSignOut.bind(this) }>(Logout)</a>
                     </span>
                   }
                 </div>

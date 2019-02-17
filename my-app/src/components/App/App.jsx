@@ -17,7 +17,7 @@ import { User } from 'radiks';
 
 import { Switch, Route } from 'react-router-dom'
 
-export default class App extends React.Component {
+export default class App extends Component {
 
   constructor(props) {
   	super(props);
@@ -26,6 +26,8 @@ export default class App extends React.Component {
     this.state = {
       isOpen: false
     };
+
+    
   }
 
   toggle() {
@@ -34,21 +36,32 @@ export default class App extends React.Component {
     });
   }
 
-  handleSignIn = (e) =>  {
+  // handleSignIn = (e) =>  {
+  //   if (isSignInPending()) {
+  //     console.log('zero')
+  //     (async () => {
+  //       console.log('one')
+  //       await handlePendingSignIn();
+  //     })();
+  //     (async () => {
+  //       console.log('two')
+  //       await User.createWithCurrentUser();
+  //     })();
+  //   } else {
+  //     e.preventDefault();
+  //     const origin = window.location.origin
+  //     redirectToSignIn(origin, origin + '/manifest.json', ['store_write', 'publish_data'])
+  //   }
+  // }
+  
+  handlePendingSignIn = async (e) => {
     if (isSignInPending()) {
-      console.log('zero')
-      (async () => {
-        console.log('one')
-        await handlePendingSignIn();
-      })();
-      (async () => {
-        console.log('two')
-        await User.createWithCurrentUser();
-      })();
+      await handlePendingSignIn();
+      await User.createWithCurrentUser();
     } else {
       e.preventDefault();
-      const origin = window.location.origin
-      redirectToSignIn(origin, origin + '/manifest.json', ['store_write', 'publish_data'])
+      const { origin } = window.location;
+      redirectToSignIn(origin, origin + '/manifest.json', ['store_write', 'publish_data']);
     }
   }
 
@@ -59,48 +72,20 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <Header/>
-        <Home/>
+      <div className="site-wrapper">
+        <div className="site-wrapper-inner">
+          { !isUserSignedIn() ?
+            <Signin handleSignIn={ this.handlePendingSignIn } />
+            : 
+            <div>
+              <Header/>
+              <Home handleSignOut={ this.handleSignOut }/>
+            </div>
+          }
+        </div>
       </div>
     )
   }
-
-  // render() {
-  //   return (
-  //     <div className="site-wrapper">
-  //       <div className="site-wrapper-inner">
-  //         <Navbar color="light" light expand="md">
-  //           <NavbarBrand href="/">HAHA!</NavbarBrand>
-  //           <NavbarToggler onClick={this.toggle} />
-  //           <Collapse isOpen={this.state.isOpen} navbar>
-  //             <Nav className="ml-auto" navbar>
-  //               <NavItem label="hi">
-  //                 <NavLink href="/components/"></NavLink>
-  //               </NavItem>
-  //               <NavItem>
-  //                 <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-  //               </NavItem>
-  //             </Nav>
-  //           </Collapse>
-  //         </Navbar>
-  //         { !isUserSignedIn() ?
-  //           <Signin handleSignIn={ this.handleSignIn } />
-  //           : 
-  //           <Switch>
-  //             <Route 
-  //               path='/:username?' 
-  //               render={
-  //                 routeProps => <Profile handleSignOut={ this.handleSignOut } {...routeProps} />
-  //               } 
-  //             />
-  //           </Switch>
-  //         }
-  //         <Collab></Collab>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   componentWillMount() {
     if (isSignInPending()) {

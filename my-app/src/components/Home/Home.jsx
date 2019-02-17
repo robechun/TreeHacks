@@ -7,7 +7,7 @@ const Home = () => (
   <main className="home">
     <Switch>
       <Route exact path='/' component={Profile}/>
-      <Route exact path='/profile' component={Profile}/>
+      <Route exact path='/profile' render = {(props) => <Profile {...props} />}/>
       <Route exact path='/shared' component={Shared}/>
     </Switch>
   </main>

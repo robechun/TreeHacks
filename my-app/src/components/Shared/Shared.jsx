@@ -16,7 +16,11 @@ export default class Shared extends Component {
     componentDidMount = () => {
         (async () => {
             const groups = await UserGroup.myGroups();
+            console.log('in the component mount of shared')
             console.log(groups);
+            console.log('in the component mount of shared')
+            
+
             // TODO: populate table with group stuff
         })();
     }

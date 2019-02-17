@@ -40,6 +40,13 @@ export default class Profile extends Component {
 
       showModal: false,
     };
+
+    this.selectedRows = []
+
+    this.data = [
+     ["04/03/17", "Most Recent File", "jaylee29"],
+     ["03/19/16", "Im Sick", "jaylee29, robertchung"]
+    ];
   }
 
   componentWillMount() {
@@ -67,8 +74,6 @@ export default class Profile extends Component {
       newStatus: ""
     })
   }
-
-  
 
   handleUploadNewFile(event) {
     
@@ -177,6 +182,13 @@ export default class Profile extends Component {
     this.setState({ showModal: false });
   };
 
+  handleShare = () => {
+    var index;
+    for (index in this.selectedRows) {
+      console.log(this.data[index])
+    }
+  }
+
   render() {
     const { handleSignOut } = this.props.handleSignOut;
     const { person } = this.state;
@@ -210,7 +222,11 @@ export default class Profile extends Component {
                   }
                 </div>
               </div>
-              <Table></Table>
+              <Table onRowsSelect={
+                (currentRowsSelected: array, allRowsSelected: array) => {
+                  this.selectedRows = allRowsSelected;
+                }}>
+              </Table>
             </div>
             
             {this.isLocal() &&
@@ -221,13 +237,13 @@ export default class Profile extends Component {
                     className="btn btn-primary btn-lg"
                     onClick={e => this.handleUploadNewFile(e)}
                   >
-                    Share
+                    Upload New File
                   </button>
                   <button
                     className="btn btn-primary btn-lg"
-                    onClick={e => this.handleUploadNewFile(e)}
+                    onClick={e => this.handleShare(e)}
                   >
-                    Upload New File
+                    Share
                   </button>
                 </div>
               </div>

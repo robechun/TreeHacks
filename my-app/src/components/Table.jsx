@@ -19,6 +19,7 @@ export default class Table extends Component {
 
 		const options = {
 		  filterType: 'checkbox',
+		  onRowsSelect: this.props.onRowsSelect,
 		};
 
 		return (

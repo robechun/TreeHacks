@@ -78,5 +78,10 @@ export default class App extends Component {
         window.location = window.location.origin;
       });
     }
+    if (!isUserSignedIn() && this.state.confirm) {
+      (async () => {
+        await User.createWithCurrentUser();
+      })()
+    }
   }
 }

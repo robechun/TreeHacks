@@ -49,7 +49,7 @@ export default class Shared extends Component {
       //     date: Date.now()
       //   }
       // }
-      // putFile('open/one.json', JSON.stringify(obj), { encrypt: false })
+      // putFile('from.json', JSON.stringify(obj), { encrypt: true })
       // putFile('open/two.json', JSON.stringify(obj), { encrypt: false })
       // putFile('open/three.json', JSON.stringify(obj), { encrypt: false })
     
@@ -118,11 +118,20 @@ export default class Shared extends Component {
     }
 
     handleAdd = () => {
-      let fileName = '/' + this.state.username + '/' + this.state.fileName + '.json'
-      blockstack.getFile('from.json', {decrypt: false})
+      blockstack.getFile('from.json', {decrypt: true })
       .then((fileContents) => {
-        fileContents = fileContents + this.state.userID + ' => ' + fileName + '\n'
-        blockstack.putFile('from.json', fileContents, {decrypt: false});
+        console.log(fileContents)
+        let tfileContents = JSON.parse(fileContents)
+       
+        
+        let _fileName = this.state.userID + '/' + this.state.fileName;
+
+        var obj = {};
+        obj[_fileName] = {'id': this.state.userID, 'date': Date.now()};
+        
+        var obj2 = Object.assign(tfileContents, obj);
+        console.log(JSON.stringify(obj2));
+        blockstack.putFile('from.json', JSON.stringify(obj2), { encrypt: true });
       });
     }
 

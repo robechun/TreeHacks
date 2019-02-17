@@ -7,7 +7,8 @@ import {
   putFile,
   lookupProfile,
   signUserOut,
-  listFiles
+  listFiles,
+  getPublicKeyFromPrivate,
 } from 'blockstack';
 
 import * as blockstack from 'blockstack'
@@ -61,6 +62,9 @@ export default class Profile extends Component {
     this.setState({
       username: loadUserData().username
     })
+    let publicKey = getPublicKeyFromPrivate(loadUserData().appPrivateKey);
+    console.log(loadUserData());
+    putFile(loadUserData().username + 'publickey.txt', publicKey, {decrypt: false});
     let input = "kimjenna.id.blockstack/";
     listFiles((files) => {
      if (files.substring(0, input.length) === input) {
@@ -68,8 +72,6 @@ export default class Profile extends Component {
      }
      return true;
     })
-    console.log('whee')
-    console.log(this.state.tabledata)
   }
 
   componentWillMount() {

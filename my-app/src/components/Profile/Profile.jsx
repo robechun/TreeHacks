@@ -127,7 +127,7 @@ export default class Profile extends Component {
       treatment: treat
     }
 
-    // this.saveNewStatus(JSON.stringify(HealthChart))
+    this.saveNewStatus(JSON.stringify(HealthChart))
   }
 
   // TODO refactor or delete

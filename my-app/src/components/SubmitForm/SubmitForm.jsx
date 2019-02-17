@@ -10,7 +10,6 @@ export default class SubmitForm extends Component {
   }
 
   render() {
-
     let styles = {
       'margin': '20px',
       'opacity': '0.5',

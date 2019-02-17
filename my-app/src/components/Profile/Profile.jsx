@@ -221,6 +221,12 @@ export default class Profile extends Component {
                     className="btn btn-primary btn-lg"
                     onClick={e => this.handleUploadNewFile(e)}
                   >
+                    Share
+                  </button>
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={e => this.handleUploadNewFile(e)}
+                  >
                     Upload New File
                   </button>
                 </div>

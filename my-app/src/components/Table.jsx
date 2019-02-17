@@ -10,26 +10,27 @@ export default class Table extends Component {
     componentDidMount = () => {
 
     }
-    render() {
-        const columns = ["Date", "Name", "Access"];
+	render() {
 
-        const data = [
-         ["04/03/17", "Most Recent File", "jaylee29"],
-         ["03/19/16", "Im Sick", "jaylee29, robertchung"]
-        ];
+		const columns = ["Date", "File Name"];
 
-        const options = {
-          filterType: 'checkbox',
-          onRowsSelect: this.props.onRowsSelect,
-        };
+		const data = [
+		 ["04/03/17", "file1"],
+		 ["03/19/16", "file2"]
+		];
 
-        return (
-            <MUIDataTable
-              title={"Medical Data"}
-              data={data}
-              columns={columns}
-              options={options}
-            />
-        )
-    }
+		const options = {
+		  filterType: 'checkbox',
+		  onRowsSelect: this.props.onRowsSelect,
+		};
+
+		return (
+			<MUIDataTable
+			  title={"Medical Data"}
+			  data={this.props.data}
+			  columns={columns}
+			  options={options}
+			/>
+		)
+	}
 }

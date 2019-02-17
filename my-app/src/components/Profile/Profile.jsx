@@ -107,39 +107,46 @@ export default class Profile extends Component {
     this.setState({showModal: true})
   }
 
-  handleUpload = () => {
-    // scrap json data
-    // to make healthchart
+  handleUpload = (fname,lname,age,date,symp,diag,treat) => {
+    console.log(fname);
+    console.log(lname);
+    console.log(age);
+    console.log(date);
+    console.log(symp);
+    console.log(diag);
+    console.log(treat);
     const HealthChart = {
-      userGroupId: "dummy", 
-      name: "Jay",
-      age: 13,
-      date: Date.now(),
-      symptoms: "hi",
-      dianosis: "hi",
-      treatment: "hi"
+      userGroupId: fname, 
+      name: lname,
+      age: age,
+      date:date,
+      symptoms: symp,
+      dianosis: diag,
+      treatment: treat
     }
 
-    this.saveNewStatus(JSON.stringify(HealthChart))
+    // this.saveNewStatus(JSON.stringify(HealthChart))
   }
 
   // TODO refactor or delete
   saveNewStatus = (statusText) => {
-    let statuses = this.state.statuses
+    //let statuses = this.state.statuses
     let status = {
       id: this.state.statusIndex++,
       text: statusText.trim(),
       created_at: Date.now()
     }
-    statuses.unshift(JSON.stringify(status))
+    //statuses.unshift(JSON.stringify(status))
 
     const options = { encrypt: false }
     putFile(this.state.username + '/' + this.state.statusIndex + '.json', JSON.stringify(status), options)
       .then(res => {
         this.setState({
-          statuses: statuses
+          //statuses: statuses
         })
       })
+    this.fetchData(this.state.username + '/' + this.state.statusIndex + '.json')
+    this.render()
   }
 
   handleSignOut(e) {
@@ -242,6 +249,7 @@ export default class Profile extends Component {
     const options = {
       'filterType': 'checkbox',
       'onRowsSelect': this.props.onRowsSelect,
+      'onRowClick': this.props.onRowClick,
     };
 
     return (

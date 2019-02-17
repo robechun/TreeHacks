@@ -31,10 +31,8 @@ export default class Profile extends Component {
       username: "",
       newStatus: "",
 
-
       statuses: [],
       statusIndex: 0,
-
 
       isLoading: false
     };
@@ -66,10 +64,27 @@ export default class Profile extends Component {
     })
   }
 
-  // TODO refactor or delete
-  saveNewStatus(statusText) {
-    let statuses = this.state.statuses
+  
 
+  handleUploadNewFile(event) {
+    
+    // TODO: allow user to put in a text file
+    // saveNewStatus(text)
+    const HealthChart = {
+      userGroupId: "dummy", 
+      name: "Jay",
+      age: 13,
+      date: Date.now(),
+      symptoms: "hi",
+      dianosis: "hi",
+      treatment: "hi"
+    }
+    this.saveNewStatus(JSON.stringify(HealthChart))
+  }
+
+  // TODO refactor or delete
+  saveNewStatus = (statusText) => {
+    let statuses = this.state.statuses
     let status = {
       id: this.state.statusIndex++,
       text: statusText.trim(),
@@ -78,7 +93,7 @@ export default class Profile extends Component {
 
     statuses.unshift(status)
     const options = { encrypt: false }
-    putFile(statusFileName, JSON.stringify(statuses), options)
+    putFile('statuses.json', JSON.stringify(statuses), options)
       .then(() => {
         this.setState({
           statuses: statuses
@@ -86,25 +101,34 @@ export default class Profile extends Component {
       })
   }
 
+  handleSignOut(e) {
+    e.preventDefault();
+    signUserOut(window.location.origin);
+  }
+  
   // TODO refactor or delete
   fetchData() {
-    if (this.isLocal()) {
-      this.setState({ isLoading: true })
-      const options = { decrypt: false, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' }
-      getFile(statusFileName, options)
-        .then((file) => {
-          var statuses = JSON.parse(file || '[]')
-          this.setState({
-            person: new Person(loadUserData().profile),
-            username: loadUserData().username,
-            statusIndex: statuses.length,
-            statuses: statuses,
-          })
+    // use invitationKey to access the pool
+    // query the pool
+    // and get document
+    // save document on my local file aka handleUploadNewFile on my part
+
+    this.setState({ isLoading: true })
+    const options = { decrypt: false, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' }
+    getFile('statuses.json', options)
+      .then((file) => {
+        var statuses = JSON.parse(file || '[]')
+        this.setState({
+          person: new Person(loadUserData().profile),
+          username: loadUserData().username,
+          statusIndex: statuses.length,
+          statuses: statuses,
         })
-        .finally(() => {
-          this.setState({ isLoading: false })
-        })
-    } else {
+      })
+      .finally(() => {
+        this.setState({ isLoading: false })
+      };
+    /*} else {
       const username = this.props.match.params.username
       this.setState({ isLoading: true })
 
@@ -135,7 +159,8 @@ export default class Profile extends Component {
         .finally(() => {
           this.setState({ isLoading: false })
         })
-    }
+      }
+      */
   }
 
   isLocal() {
@@ -174,11 +199,12 @@ export default class Profile extends Component {
             </div>
             
             {this.isLocal() &&
+              
               <div className="new-status">
                 <div className="col-md-12 text-right">
                   <button
                     className="btn btn-primary btn-lg"
-                    onClick={e => this.handleNewStatusSubmit(e)}
+                    onClick={e => this.handleUploadNewFile(e)}
                   >
                     Upload New File
                   </button>

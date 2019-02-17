@@ -27,12 +27,18 @@ export default class Shared extends Component {
 
   render() {
     return (
-        <MUIDataTable
-            title={"Records shared with me"}
-            data={this.state.data}
-            columns={this.state.columns}
-            // options={options}
-        />  
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <MUIDataTable
+              title={"Records shared with me"}
+              data={this.state.data}
+              columns={this.state.columns}
+              // options={options}
+            />  
+          </div>
+        </div>
+      </div>
     )
   }
 }

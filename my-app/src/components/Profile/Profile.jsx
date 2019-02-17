@@ -64,8 +64,6 @@ export default class Profile extends Component {
     })
   }
 
-  
-
   handleUploadNewFile(event) {
     
     // TODO: allow user to put in a text file
@@ -122,7 +120,7 @@ export default class Profile extends Component {
           person: new Person(loadUserData().profile),
           username: loadUserData().username,
           statusIndex: statuses.length,
-          statuses: statuses,
+          statuses: statuses,// prefix owner address/username/index
         })
       })
       .finally(() => {

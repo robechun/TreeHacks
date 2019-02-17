@@ -142,7 +142,7 @@ export default class Profile extends Component {
   }
 
   render() {
-    const { handleSignOut } = this.props;
+    const { handleSignOut } = this.props.handleSignOut;
     const { person } = this.state;
     const { username } = this.state;
 
@@ -165,15 +165,11 @@ export default class Profile extends Component {
                   {this.isLocal() &&
                     <span>
                       &nbsp;|&nbsp;
-                      <a onClick={ handleSignOut.bind(this) }>(Logout)</a>
+                      <a onClick={e => handleSignOut(e)}>(Logout)</a>
                     </span>
                   }
                 </div>
               </div>
-            </div>
-            <div>
-            {/* This might be where we put the table in */}
-              <Table></Table>
             </div>
             {/* This might be where we put the table in */}
             

@@ -122,7 +122,6 @@ export default class Shared extends Component {
       .then((fileContents) => {
         console.log(fileContents)
         let tfileContents = JSON.parse(fileContents)
-       
         
         let _fileName = this.state.userID + '/' + this.state.fileName;
 

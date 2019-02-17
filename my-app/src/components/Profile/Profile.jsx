@@ -219,10 +219,10 @@ export default class Profile extends Component {
         .then((fileContents) => {
           blockstack.putFile(this.toSend + filename, fileContents, options);
         });
-        blockstack.getFile('from.json', options)
+        blockstack.getFile('to.json', options)
         .then((fileContents) => {
           fileContents = fileContents + this.toSend + ' => ' + filename + '\n'
-          blockstack.putFile('from.json', fileContents, options);
+          blockstack.putFile('to.json', fileContents, options);
         });
       }
       if (this.willOpenSource) {

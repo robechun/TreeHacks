@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import Profile from '../Profile/Profile.jsx';
 import Shared from '../Shared/Shared.jsx';
 import RecordForm from '../Forms/RecordForm.jsx';
+import Open from '../OpenSource/Open.jsx';
 
 export default class Home extends Component	{
   constructor(props) {
@@ -17,6 +18,7 @@ export default class Home extends Component	{
 	      <Route exact path='/profile' render = {(props) => <Profile {...props} handleSignOut={this.props} />}/>
 	      <Route exact path='/shared' component={Shared}/>
         <Route exact path='/test' component={RecordForm}/>
+        <Route exact path='/open' component={Open}/>
 	    </Switch>
 	  </main>
     );

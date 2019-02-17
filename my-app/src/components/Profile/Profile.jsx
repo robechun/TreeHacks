@@ -11,6 +11,8 @@ import {
 
 import Table from "../Table.jsx";
 import HealthChart from "../../models/HealthChart.jsx"
+import SubmitForm from '../SubmitForm/SubmitForm.jsx';
+import Modal from '@material-ui/core/Modal';
 
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
@@ -34,7 +36,9 @@ export default class Profile extends Component {
       statuses: [],
       statusIndex: 0,
 
-      isLoading: false
+      isLoading: false,
+
+      showModal: false,
     };
   }
 
@@ -80,6 +84,8 @@ export default class Profile extends Component {
       treatment: "hi"
     }
     this.saveNewStatus(JSON.stringify(HealthChart))
+
+    this.setState({showModal: true})
   }
 
   // TODO refactor or delete
@@ -167,10 +173,19 @@ export default class Profile extends Component {
     return this.props.match.params.username ? false : true
   }
 
+  handleClose = () => {
+    this.setState({ showModal: false });
+  };
+
   render() {
     const { handleSignOut } = this.props.handleSignOut;
     const { person } = this.state;
     const { username } = this.state;
+
+    const modalStyles = {
+      'position': 'absolute',
+      'top': '20%',
+    };
 
     return (
       !isSignInPending() && person ?
@@ -213,6 +228,12 @@ export default class Profile extends Component {
             }
           </div>
         </div>
+        <Modal 
+          onClose={this.handleClose}
+          open={this.state.showModal} 
+          style={modalStyles}>
+          <SubmitForm />
+        </Modal>
       </div> : null
     );
   }

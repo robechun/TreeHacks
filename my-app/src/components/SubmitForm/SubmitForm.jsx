@@ -17,9 +17,9 @@ export default class SubmitForm extends Component {
     };
 
     return (
-      <div style={{'margin': '20px'}}>
+      <div style={{'margin': '0px auto', 'background-color': '#fa8072', 'width': '50%', 'padding': '20px', 'align': 'center'}}>
         <RecordForm />
-        <Button variant="outlined" style={styles} >JENNA!</Button>
+        <Button variant="outlined" style={styles} >Upload</Button>
       </div>
     )
   };

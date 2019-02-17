@@ -49,11 +49,10 @@ export default class Shared extends Component {
       //     date: Date.now()
       //   }
       // }
-      // putFile('test_jay.json', JSON.stringify(obj), { encrypt: '0345cfc049b757cf5a8432646efb8cdd7c804a1ba25c2d10f1db67a0f90d8d1679' })
-  
-      this.setState({
-        username: loadUserData().username
-      })
+      // putFile('open/one.json', JSON.stringify(obj), { encrypt: false })
+      // putFile('open/two.json', JSON.stringify(obj), { encrypt: false })
+      // putFile('open/three.json', JSON.stringify(obj), { encrypt: false })
+    
       // Fetch from your local `from` mapping, decrypt it with your private key, and populate the database.
       const options = { decrypt: true }; //, zoneFileLookupURL: 'https://core.blockstack.org/v1/names/' } TODO: might need zonefile
       getFile('from.json', options)

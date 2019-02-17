@@ -40,7 +40,7 @@ export default class Collab extends Component {
         return (
             <div>
                 <Input
-                    placeholder="Placeholder"
+                    placeholder="Username"
                     // className={classes.input}
                     inputProps={{
                         'aria-label': 'Blockstack ID',

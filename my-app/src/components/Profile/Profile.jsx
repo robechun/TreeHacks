@@ -9,6 +9,8 @@ import {
   signUserOut
 } from 'blockstack';
 
+import Table from "../Table.jsx";
+
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
 
@@ -162,10 +164,8 @@ export default class Profile extends Component {
                 />
                 <div className="username">
                   <h1>
-                    <span id="heading-name">{ person.name() ? person.name()
-                      : 'Nameless Person' }</span>
+                    <span>{username}</span>
                   </h1>
-                  <span>{username}</span>
                   {this.isLocal() &&
                     <span>
                       &nbsp;|&nbsp;
@@ -175,7 +175,10 @@ export default class Profile extends Component {
                 </div>
               </div>
             </div>
-
+            <div>
+            {/* This might be where we put the table in */}
+              <Table></Table>
+            </div>
             {/* This might be where we put the table in */}
             
             {this.isLocal() &&

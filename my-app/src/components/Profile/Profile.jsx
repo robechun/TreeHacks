@@ -10,7 +10,7 @@ import {
 } from 'blockstack';
 
 import Table from "../Table.jsx";
-import HealthChart from '../../models/HealthChart.js'
+import HealthChart from '../../models/HealthChart.jsx'
 
 
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';

@@ -26,7 +26,7 @@ export default class Shared extends Component {
         <MUIDataTable
             title={"Records shared with me"}
             data={this.state.data}
-            columns={colthis.state.columns}
+            columns={this.state.columns}
             // options={options}
         />  
     )

@@ -8,6 +8,9 @@ import {
   lookupProfile
 } from 'blockstack';
 
+import Table from "../components/Table.jsx";
+// import Shared from "../views/Shared.jsx";
+
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
 
@@ -157,10 +160,8 @@ export default class Profile extends Component {
                 />
                 <div className="username">
                   <h1>
-                    <span id="heading-name">{ person.name() ? person.name()
-                      : 'Nameless Person' }</span>
+                    <span>{username}</span>
                   </h1>
-                  <span>{username}</span>
                   {this.isLocal() &&
                     <span>
                       &nbsp;|&nbsp;
@@ -171,9 +172,12 @@ export default class Profile extends Component {
               </div>
             </div>
 
+            <div>
             {/* This might be where we put the table in */}
+            <Table></Table>
+            </div>
             
-            {this.isLocal() &&
+            {/* {this.isLocal() &&
               <div className="new-status">
                 <div className="col-md-12">
                   <textarea className="input-status"
@@ -192,6 +196,8 @@ export default class Profile extends Component {
                 </div>
               </div>
             }
+            */}
+
             <div className="col-md-12 statuses">
             {this.state.isLoading && <span>Loading...</span>}
             {this.state.statuses.map((status) => (

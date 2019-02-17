@@ -50,6 +50,8 @@ export default class App extends Component {
           { !isUserSignedIn() ?
             <Signin handleSignIn={ this.handleSignIn } />
             : 
+            // add div and move collab
+            <div>
             <Switch>
               <Route 
                 path='/:username?' 
@@ -58,8 +60,9 @@ export default class App extends Component {
                 } 
               />
             </Switch>
+            <Collab></Collab>
+            </div>
           }
-          <Collab></Collab>
         </div>
       </div>
     );

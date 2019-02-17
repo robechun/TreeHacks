@@ -24,7 +24,7 @@ export default class Collab extends Component {
     }
     
     handleShare = () => {
-        const group = new UserGroup({ name: 'records-health-' + blockstack.loadUserData().then(profile => profile.name) }); 
+        const group = new UserGroup({ name: 'records-health-' + blockstack.loadUserData().profile.name }); 
         console.log(group);
 
         (async () => {
@@ -40,7 +40,7 @@ export default class Collab extends Component {
         return (
             <div>
                 <Input
-                    placeholder="Placeholder"
+                    placeholder="Username"
                     // className={classes.input}
                     inputProps={{
                         'aria-label': 'Blockstack ID',

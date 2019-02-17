@@ -12,8 +12,7 @@ export default class SubmitForm extends Component {
   render() {
     let styles = {
       'margin': '20px',
-      'opacity': '0.5',
-      'background-color': '#808080',
+      'backgroundColor': '#808585',
     };
 
     return (

@@ -7,9 +7,9 @@ export default class Shared extends Component {
         super(props);
 
         this.state = {
-            groups : [],
-            columns : ['Blockstack ID'],
-            data : []
+            groups: [],
+            columns: ['Blockstack ID'],
+            data: []
         }
     }
 

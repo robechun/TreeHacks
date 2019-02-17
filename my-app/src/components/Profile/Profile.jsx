@@ -5,8 +5,11 @@ import {
   Person,
   getFile,
   putFile,
-  lookupProfile
+  lookupProfile,
+  signUserOut
 } from 'blockstack';
+
+import Table from "../Table.jsx";
 
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 const statusFileName = 'statuses.json'
@@ -139,7 +142,7 @@ export default class Profile extends Component {
   }
 
   render() {
-    const { handleSignOut } = this.props;
+    const { handleSignOut } = this.props.handleSignOut;
     const { person } = this.state;
     const { username } = this.state;
 
@@ -157,20 +160,17 @@ export default class Profile extends Component {
                 />
                 <div className="username">
                   <h1>
-                    <span id="heading-name">{ person.name() ? person.name()
-                      : 'Nameless Person' }</span>
+                    <span>{username}</span>
                   </h1>
-                  <span>{username}</span>
                   {this.isLocal() &&
                     <span>
                       &nbsp;|&nbsp;
-                      <a onClick={ handleSignOut.bind(this) }>(Logout)</a>
+                      <a onClick={e => handleSignOut(e)}>(Logout)</a>
                     </span>
                   }
                 </div>
               </div>
             </div>
-
             {/* This might be where we put the table in */}
             
             {this.isLocal() &&

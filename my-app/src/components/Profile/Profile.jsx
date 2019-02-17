@@ -212,17 +212,23 @@ export default class Profile extends Component {
   handleShare = () => {
     var index;
     for (index in this.selectedRows) {
-      let options = {decrypt: false}
+      let options = {decrypt: false, encrypt: false}
+      let filename = this.data[index][1]
       if (this.toSend.length > 0) {
-        blockstack.getFile(this.data[index][1], {decrypt: false})
+        blockstack.getFile(filename, options)
         .then((fileContents) => {
-          blockstack.putFile(this.toSend + this.data[index][1], fileContents, options);
+          blockstack.putFile(this.toSend + filename, fileContents, options);
+        });
+        blockstack.getFile('from.json', options)
+        .then((fileContents) => {
+          fileContents = fileContents + this.toSend + ' => ' + filename + '\n'
+          blockstack.putFile('from.json', fileContents, options);
         });
       }
       if (this.willOpenSource) {
-        blockstack.getFile(this.data[index][1], {decrypt: false})
+        blockstack.getFile(filename, options)
         .then((fileContents) => {
-          blockstack.putFile('openSource' + this.data[index][1], fileContents, options);
+          blockstack.putFile('open/' + filename, fileContents, options);
         });
       }
     }

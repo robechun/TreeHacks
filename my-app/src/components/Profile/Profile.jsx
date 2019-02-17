@@ -64,7 +64,7 @@ export default class Profile extends Component {
     })
     let publicKey = getPublicKeyFromPrivate(loadUserData().appPrivateKey);
     console.log(loadUserData());
-    putFile(loadUserData().username + 'publickey.txt', publicKey, {decrypt: false});
+    putFile(loadUserData().username + '/publickey.txt', publicKey, {encrypt: false});
     let input = "kimjenna.id.blockstack/";
     listFiles((files) => {
      if (files.substring(0, input.length) === input) {
@@ -186,9 +186,9 @@ export default class Profile extends Component {
     var index;
     for (index in this.selectedRows) {
       let options = {decrypt: false, encrypt: false}
-      let filename = this.data[index][1]
+      let filename = this.state.username + '/' + index + '.json'
       if (this.toSend.length > 0) {
-        blockstack.getFile(this.toSend + 'publickey.txt', options)
+        blockstack.getFile(this.toSend + '.id.blockstack/publickey.txt', options)
         .then((BPublicKey) => {
           blockstack.getFile(filename, options)
           .then((fileContents) => {

@@ -8,6 +8,7 @@ import {
   redirectToSignIn,
   handlePendingSignIn,
   signUserOut,
+  decryptPrivateKey
 } from 'blockstack';
 
 import Header from '../Header/Header'

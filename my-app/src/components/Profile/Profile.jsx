@@ -10,11 +10,14 @@ import {
   listFiles
 } from 'blockstack';
 
+import * as blockstack from 'blockstack'
+
 import Table from "../Table.jsx";
 import HealthChart from "../../models/HealthChart.jsx"
 import SubmitForm from '../SubmitForm/SubmitForm.jsx';
 
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
 import Dialog from '@material-ui/core/Dialog';
@@ -43,9 +46,13 @@ export default class Profile extends Component {
       showDialog: false,
       toSend: "",
       columns: ["Date", "File Name"],
+      willOpenSource: false,
+
     };
 
     this.selectedRows = []
+    
+
   }
 
   componentDidMount() {
@@ -190,16 +197,36 @@ export default class Profile extends Component {
 
   handleShare = () => {
     var index;
-    console.log('sent');
     for (index in this.selectedRows) {
-      
-      console.log(this.data[index])
+      let options = {decrypt: false, encrypt: false}
+      let filename = this.data[index][1]
+      if (this.toSend.length > 0) {
+        blockstack.getFile(filename, options)
+        .then((fileContents) => {
+          blockstack.putFile(this.toSend + filename, fileContents, options);
+        });
+        blockstack.getFile('to.json', options)
+        .then((fileContents) => {
+          fileContents = fileContents + this.toSend + ' => ' + filename + '\n'
+          blockstack.putFile('to.json', fileContents, options);
+        });
+      }
+      if (this.willOpenSource) {
+        blockstack.getFile(filename, options)
+        .then((fileContents) => {
+          blockstack.putFile('open/' + filename, fileContents, options);
+        });
+      }
     }
-    console.log('to ' + this.toSend);
   }
 
   handleTextFieldChange = (e) => {
     this.toSend = e.target.value;
+  }
+
+  handleCheckboxChange = (e, checked) => {
+    this.willOpenSource = checked;
+    console.log(checked);
   }
 
   render() {
@@ -293,6 +320,10 @@ export default class Profile extends Component {
               fullWidth
               onChange={this.handleTextFieldChange}
             />
+            <Checkbox
+            id="checkbox"
+            onChange={this.handleCheckboxChange}
+            label="Open Source?"></Checkbox><font size="3" color="black">Open Source?</font>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleCloseShareDialog} color="primary">
